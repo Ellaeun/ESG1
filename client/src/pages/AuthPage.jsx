@@ -20,19 +20,12 @@ import ArrowRightPrimary from "../assets/arrow-right-primary.svg";
 AuthPage.propTypes = {
   email: PropTypes.string.isRequired,
   setEmail: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  setPassword: PropTypes.func.isRequired,
   setIsLoggedIn: PropTypes.func.isRequired,
 };
 
-export default function AuthPage({
-  email,
-  setEmail,
-  password,
-  setPassword,
-  setIsLoggedIn,
-}) {
+export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
   const { apiUrl } = useAppContext();
+  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isCredentialsValid, setIsCredentialsValid] = useState(true);
   const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -47,7 +40,7 @@ export default function AuthPage({
     </>,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalIcon, setModalIcon] = useState("AlertOctagon");
+  const [modalIcon, setModalIcon] = useState("");
 
   function testEmail() {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -89,6 +82,9 @@ export default function AuthPage({
       setIsModalOpen(true);
       setModalMessage("Your account has been successfully registered!");
       setModalIcon("Checkmark");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
 
       console.log({ status: res.status, message: res.data.message });
     } catch (err) {
@@ -131,6 +127,7 @@ export default function AuthPage({
       setModalMessage("You have successfully signed in!");
       setModalIcon("Checkmark");
       setIsLoggedIn(true);
+      setPassword("");
 
       console.log({ status: res.status, message: res.data.message });
     } catch (err) {

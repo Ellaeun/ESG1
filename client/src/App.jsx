@@ -7,7 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
@@ -23,8 +23,6 @@ export default function App() {
           <AuthPage
             email={email}
             setEmail={setEmail}
-            password={password}
-            setPassword={setPassword}
             setIsLoggedIn={setIsLoggedIn}
           />
         }
@@ -33,7 +31,7 @@ export default function App() {
         path="/admission"
         element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <FormPage />
+            <FormPage email={email} />
           </ProtectedRoute>
         }
       ></Route>
