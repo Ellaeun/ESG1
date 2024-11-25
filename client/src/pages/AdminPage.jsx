@@ -8,7 +8,7 @@ AdminPage.propTypes = {
 
 export default function AdminPage({ email }) {
 	return (
-		<div className="">
+		<div className="bg-secondary">
 			<Nav>
 				<div className="w-full h-full bg-emerald-300">
 					Admin

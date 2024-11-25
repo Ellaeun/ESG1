@@ -8,7 +8,7 @@ StudentPage.propTypes = {
 
 export default function StudentPage({ email }) {
 	return (
-		<div className="">
+		<div className="bg-secondary">
 			<Nav>
 				<div className="w-full h-full bg-emerald-300">
 					Student
