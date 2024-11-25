@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 import Nav from "../components/Nav.jsx";
 
-// import AcademicRecordTertiary from "../components/academic-record-tertiary.svg"
+import AcademicRecordTertiary from "../assets/academic-record-tertiary.svg"
 
 StudentPage.propTypes = {
 	email: PropTypes.string.isRequired,

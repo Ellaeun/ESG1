@@ -12,7 +12,7 @@ export default function AdminPage({ email }) {
   return (
     <div className="bg-secondary">
       <Nav>
-        <div className="h-full w-full bg-component">
+        <div className="h-full w-full bg-highlight">
 					Admin
 					
 				</div>
