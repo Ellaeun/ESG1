@@ -6,14 +6,13 @@ module.exports = {
     extend: {
       colors: {
         primary: "#F5F5F5",
-        secondary: "#E2E2E2",
+        secondary: "#DBDBDB",
         tertiary: "#565656",
         highlight: "#134713",
+        component: "#F5F5F550",
         "highlight-light": "#1b651b",
-        accent: "#ffef00",
       },
       fontFamily: {
-        helvetica: ["Helvetica", "sans"],
         montserrat: ["Montserrat", "sans"],
         "helvetica-compressed": ["Helvetica Compressed", "sans"],
       },

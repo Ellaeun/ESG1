@@ -5,20 +5,6 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "Helvetica";
-  src: url("./assets/helvetica.ttf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Helvetica";
-  src: url("./assets/helvetica-bold.ttf") format("opentype");
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
   font-family: "Helvetica Compressed";
   src: url("./assets/helvetica-compressed.otf") format("opentype");
   font-weight: normal;
