@@ -4,6 +4,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage.jsx";
 import FormPage from "./pages/FormPage.jsx";
 import StudentPage from "./pages/StudentPage.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
@@ -39,7 +40,7 @@ export default function App() {
       <Route
         path="/admin"
         element={
-          <StudentPage
+          <AdminPage
             email={email}
           />
         }
