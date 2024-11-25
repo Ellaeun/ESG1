@@ -190,11 +190,11 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
               {!isRegistering && (
                 <>
                   <div className="flex w-full flex-col">
-                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-base">
+                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-sm">
                       Email Address / Student Number
                     </label>
                     <input
-                      className={`w-full p-4 text-tertiary q-h-14 q-text-base q-rounded-xl focus:bg-primary ${
+                      className={`w-full p-4 text-tertiary q-h-12 q-text-sm q-rounded-xl focus:bg-primary ${
                         isCredentialsValid
                           ? "bg-secondary"
                           : "border-2 border-red-600 bg-red-200 px-3.5"
@@ -206,12 +206,12 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                     />
                   </div>
                   <div className="flex w-full flex-col">
-                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-base">
+                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-sm">
                       Password
                     </label>
                     <div className="flex gap-1">
                       <input
-                        className={`w-full rounded-r p-4 text-tertiary q-h-14 q-text-base q-rounded-l-xl focus:bg-primary ${
+                        className={`w-full rounded-r p-4 text-tertiary q-h-12 q-text-sm q-rounded-l-xl focus:bg-primary ${
                           isCredentialsValid
                             ? "bg-secondary"
                             : "border-2 border-red-600 bg-red-200 px-3.5"
@@ -226,7 +226,7 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                         onClick={() => setIsPasswordShown(!isPasswordShown)}
                       >
                         <img
-                          className="q-w-6 group-hover:hidden"
+                          className="q-w-5 group-hover:hidden"
                           src={
                             isPasswordShown
                               ? ShowPasswordTertiary
@@ -234,7 +234,7 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                           }
                         />
                         <img
-                          className="hidden w-6 group-hover:block"
+                          className="hidden q-w-5 group-hover:block"
                           src={
                             isPasswordShown
                               ? ShowPasswordPrimary
@@ -249,11 +249,11 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
               {isRegistering && (
                 <>
                   <div className="flex w-full flex-col">
-                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-base">
+                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-sm">
                       Email Address
                     </label>
                     <input
-                      className={`w-full p-4 text-tertiary q-h-14 q-text-base q-rounded-xl focus:bg-primary ${
+                      className={`w-full p-4 text-tertiary q-h-12 q-text-sm q-rounded-xl focus:bg-primary ${
                         isCredentialsValid
                           ? "bg-secondary"
                           : "border-2 border-red-600 bg-red-200 px-3.5"
@@ -265,12 +265,12 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                     />
                   </div>
                   <div className="flex w-full flex-col">
-                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-base">
+                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-sm">
                       Password
                     </label>
                     <div className="flex gap-1">
                       <input
-                        className={`w-full rounded-r p-4 text-tertiary q-h-14 q-text-base q-rounded-l-xl focus:bg-primary ${
+                        className={`w-full rounded-r p-4 text-tertiary q-h-12 q-text-sm q-rounded-l-xl focus:bg-primary ${
                           isCredentialsValid
                             ? "bg-secondary"
                             : "border-2 border-red-600 bg-red-200 px-3.5"
@@ -285,7 +285,7 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                         onClick={() => setIsPasswordShown(!isPasswordShown)}
                       >
                         <img
-                          className="q-w-6 group-hover:hidden"
+                          className="q-w-5 group-hover:hidden"
                           src={
                             isPasswordShown
                               ? ShowPasswordTertiary
@@ -293,7 +293,7 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                           }
                         />
                         <img
-                          className="hidden w-6 group-hover:block"
+                          className="hidden q-w-5 group-hover:block"
                           src={
                             isPasswordShown
                               ? ShowPasswordPrimary
@@ -304,12 +304,12 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                     </div>
                   </div>
                   <div className="flex w-full flex-col">
-                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-base">
+                    <label className="mb-1 ml-1 font-bold text-tertiary q-text-sm">
                       Confirm Password
                     </label>
                     <div className="flex gap-1">
                       <input
-                        className={`w-full rounded-r p-4 text-tertiary q-h-14 q-text-base q-rounded-l-xl focus:bg-primary ${
+                        className={`w-full rounded-r p-4 text-tertiary q-h-12 q-text-sm q-rounded-l-xl focus:bg-primary ${
                           isCredentialsValid
                             ? "bg-secondary"
                             : "border-2 border-red-600 bg-red-200 px-3.5"
@@ -324,7 +324,7 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                         onClick={() => setIsPasswordShown(!isPasswordShown)}
                       >
                         <img
-                          className="q-w-6 group-hover:hidden"
+                          className="q-w-5 group-hover:hidden"
                           src={
                             isPasswordShown
                               ? ShowPasswordTertiary
@@ -332,7 +332,7 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                           }
                         />
                         <img
-                          className="hidden w-6 group-hover:block"
+                          className="hidden q-w-5 group-hover:block"
                           src={
                             isPasswordShown
                               ? ShowPasswordPrimary
@@ -350,11 +350,11 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
             {!isRegistering && (
               <>
                 <button
-                  className="group mt-7 flex w-full items-center justify-center bg-highlight q-h-14 q-gap-5 q-rounded-xl hover:bg-highlight-light disabled:bg-secondary"
+                  className="group mt-7 flex w-full items-center justify-center bg-highlight q-h-12 q-gap-5 q-rounded-xl hover:bg-highlight-light disabled:bg-secondary"
                   disabled={!(email.length > 0 && password.length > 0)}
                   onClick={signIn}
                 >
-                  <p className="font-bold text-primary q-text-base group-disabled:text-tertiary">
+                  <p className="font-bold text-primary q-text-sm group-disabled:text-tertiary">
                     Sign In
                   </p>
                   <img
@@ -369,18 +369,18 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                 {/* sign in button */}
                 <div className="my-4 flex w-full flex-col items-center q-gap-12">
                   <button
-                    className="text-tertiary q-text-base hover:text-highlight"
+                    className="text-tertiary q-text-sm hover:text-highlight"
                     onClick={() => setIsCredentialsValid(!isCredentialsValid)}
                   >
                     Forgot Password?
                   </button>
                   <div className="h-0.5 w-full rounded bg-tertiary"></div>
-                  <p className="text-tertiary q-text-base">
+                  <p className="text-tertiary q-text-sm">
                     New Student of CvSU Bacoor?
                   </p>
                 </div>
                 <button
-                  className="w-7/12 bg-highlight font-bold text-primary q-h-14 q-text-base q-rounded-xl hover:bg-highlight-light"
+                  className="w-7/12 bg-highlight font-bold text-primary q-h-12 q-text-sm q-rounded-xl hover:bg-highlight-light"
                   onClick={() => setIsRegistering(true)}
                 >
                   Register
@@ -390,11 +390,11 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
             {isRegistering && (
               <>
                 <button
-                  className="group mb-4 mt-7 flex w-full items-center justify-center bg-highlight q-h-14 q-gap-5 q-rounded-xl hover:bg-highlight-light disabled:bg-secondary"
+                  className="group mb-4 mt-7 flex w-full items-center justify-center bg-highlight q-h-12 q-gap-5 q-rounded-xl hover:bg-highlight-light disabled:bg-secondary"
                   disabled={!(email.length > 0 && password.length > 0)}
                   onClick={registerAccount}
                 >
-                  <p className="font-bold text-primary q-text-base group-disabled:text-tertiary">
+                  <p className="font-bold text-primary q-text-sm group-disabled:text-tertiary">
                     Register
                   </p>
                   <img
@@ -408,12 +408,12 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
                 </button>
                 <div className="my-4 flex w-full flex-col items-center q-gap-12">
                   <div className="h-0.5 w-full rounded bg-tertiary"></div>
-                  <p className="text-tertiary q-text-base">
+                  <p className="text-tertiary q-text-sm">
                     Already a Student of CvSU Bacoor?
                   </p>
                 </div>
                 <button
-                  className="w-7/12 bg-highlight font-bold text-primary q-h-14 q-text-base q-rounded-xl hover:bg-highlight-light"
+                  className="w-7/12 bg-highlight font-bold text-primary q-h-12 q-text-sm q-rounded-xl hover:bg-highlight-light"
                   onClick={() => setIsRegistering(false)}
                 >
                   Sign In Instead

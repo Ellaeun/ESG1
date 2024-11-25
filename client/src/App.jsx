@@ -10,7 +10,7 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 export default function App() {
   const [email, setEmail] = useState("");
   
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {

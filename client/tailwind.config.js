@@ -24,14 +24,14 @@ module.exports = {
         ".q-w-5-12": {
           "@apply 2xl:w-5/12 lg:w-7/12 md:w-9/12": {},
         },
-        ".q-w-6": {
-          "@apply 2xl:w-6 lg:w-5 w-4": {},
+        ".q-w-5": {
+          "@apply 2xl:w-5 lg:w-4 w-3": {},
         },
         ".q-h-16": {
           "@apply 2xl:h-16 lg:h-14 h-12": {},
         },
-        ".q-h-14": {
-          "@apply 2xl:h-14 lg:h-12 h-10": {},
+        ".q-h-12": {
+          "@apply 2xl:h-12 lg:h-10 h-8": {},
         },
         ".q-gap-20": {
           "@apply 2xl:gap-20 lg:gap-16 gap-14": {},
@@ -51,8 +51,14 @@ module.exports = {
         ".q-text-4xl": {
           "@apply 2xl:text-4xl lg:text-3xl text-2xl": {},
         },
+        ".q-text-3xl": {
+          "@apply 2xl:text-3xl lg:text-2xl text-xl": {},
+        },
         ".q-text-2xl": {
           "@apply 2xl:text-2xl lg:text-xl text-lg": {},
+        },
+        ".q-text-xl": {
+          "@apply 2xl:text-xl lg:text-lg text-base": {},
         },
         ".q-text-lg": {
           "@apply 2xl:text-lg lg:text-base text-sm": {},
