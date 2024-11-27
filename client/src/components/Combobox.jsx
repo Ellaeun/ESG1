@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
-import DropdownTertiary from "../assets/dropdown-tertiary.svg";
+import DropdownTertiary from "../assets/arrow-tertiary.svg";
 
 Combobox.propTypes = {
   items: PropTypes.array.isRequired,

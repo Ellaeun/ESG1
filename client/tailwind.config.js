@@ -72,6 +72,12 @@ module.exports = {
         ".q-leading-8": {
           "@apply 2xl:leading-8 lg:leading-none leading-none": {},
         },
+        ".q-rounded-3xl": {
+          "@apply 2xl:rounded-3xl lg:rounded-2xl rounded-xl": {},
+        },
+        ".q-rounded-2xl": {
+          "@apply 2xl:rounded-2xl lg:rounded-xl rounded-xl": {},
+        },
         ".q-rounded-xl": {
           "@apply 2xl:rounded-xl lg:rounded-lg rounded-lg": {},
         },

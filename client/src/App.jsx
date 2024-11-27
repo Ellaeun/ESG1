@@ -1,21 +1,15 @@
-import { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+
+import { useAppContext } from "./context/AppContext.jsx";
 
 import AuthPage from "./pages/AuthPage.jsx";
 import FormPage from "./pages/FormPage.jsx";
-import StudentPage from "./pages/StudentPage.jsx";
-import AdminPage from "./pages/AdminPage.jsx";
+import StudentPage from "./pages/Student/StudentPage.jsx";
+import AdminPage from "./pages/Admin/AdminPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
-  const [email, setEmail] = useState("");
-  
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // isLoggedIn ? navigate("/admission") : navigate("/");
-  }, [isLoggedIn]);
+  const { isLoggedIn, setIsLoggedIn, userId, setUserId } = useAppContext();
 
   return (
     <Routes>
@@ -23,33 +17,19 @@ export default function App() {
         path="/"
         element={
           <AuthPage
-            email={email}
-            setEmail={setEmail}
+            userId={userId}
+            setUserId={setUserId}
             setIsLoggedIn={setIsLoggedIn}
           />
         }
       />
-      <Route
-        path="/student"
-        element={
-          <StudentPage
-            email={email}
-          />
-        }
-      />
-      <Route
-        path="/admin"
-        element={
-          <AdminPage
-            email={email}
-          />
-        }
-      />
+      <Route path="/student" element={<StudentPage userId={userId} />} />
+      <Route path="/admin" element={<AdminPage userId={userId} />} />
       <Route
         path="/admission"
         element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
-            <FormPage email={email} />
+            <FormPage userId={userId} />
           </ProtectedRoute>
         }
       ></Route>

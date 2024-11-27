@@ -1,3 +1,4 @@
+import React from "react"
 import PropTypes from "prop-types";
 
 import CvsuLogo from "../assets/cvsu-logo.png";
@@ -20,7 +21,7 @@ export default function Nav({ children, currentTab, setCurrentTab, tabs }) {
           </h1>
         </div>
         {tabs.map((tab, index) => (
-          <>
+          <React.Fragment key={index}>
             {tab.name === "Log Out" && (
               <div className="h-full w-full rounded-3xl bg-component" />
             )}
@@ -30,6 +31,7 @@ export default function Nav({ children, currentTab, setCurrentTab, tabs }) {
               key={index}
             >
               <img
+                className="w-6"
                 src={
                   currentTab === tab.name ? tab.iconPrimary : tab.iconTertiary
                 }
@@ -40,7 +42,7 @@ export default function Nav({ children, currentTab, setCurrentTab, tabs }) {
                 {tab.name}
               </h2>
             </button>
-          </>
+          </React.Fragment>
         ))}
       </div>
       {children}

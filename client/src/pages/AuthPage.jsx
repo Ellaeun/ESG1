@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
-import axios from "axios";
 
 import { useAppContext } from "../context/AppContext.jsx";
 
-import Modal from "../components/Modal.jsx";
+import SuccessModal from "../components/SuccessModal.jsx";
 import InputModal from "../components/InputModal.jsx";
 
 import CvsuLogo from "../assets/cvsu-logo.png";
@@ -18,13 +17,14 @@ import ArrowRightTertiary from "../assets/arrow-right-tertiary.svg";
 import ArrowRightPrimary from "../assets/arrow-right-primary.svg";
 
 AuthPage.propTypes = {
-  email: PropTypes.string.isRequired,
-  setEmail: PropTypes.func.isRequired,
+  setUserId: PropTypes.func.isRequired,
   setIsLoggedIn: PropTypes.func.isRequired,
 };
 
-export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
-  const { apiUrl } = useAppContext();
+export default function AuthPage({ setUserId, setIsLoggedIn }) {
+  const { navigate, api } = useAppContext();
+
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isCredentialsValid, setIsCredentialsValid] = useState(true);
@@ -74,13 +74,12 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
     }
 
     try {
-      const res = await axios.post(`${apiUrl}/api/register-student-account`, {
+      const res = await api.post("/auth/register-student-account", {
         email,
         password,
       });
-
       setIsModalOpen(true);
-      setModalMessage("Your account has been successfully registered!");
+      setModalMessage("Your account has been successfully registered.");
       setModalIcon("Checkmark");
       setEmail("");
       setPassword("");
@@ -118,15 +117,18 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
     }
 
     try {
-      const res = await axios.post(`${apiUrl}/api/sign-in`, {
+      const res = await api.post("/auth/sign-in", {
         email,
         password,
       });
+      localStorage.setItem("accessToken", res.data.accessToken);
+      setUserId(res.data.userId);
 
       setIsModalOpen(true);
       setModalMessage("You have successfully signed in!");
       setModalIcon("Checkmark");
       setIsLoggedIn(true);
+      setEmail("");
       setPassword("");
 
       console.log({ status: res.status, message: res.data.message });
@@ -144,7 +146,7 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
 
       console.error({
         status: err.response.status,
-        message: err.response.data.message,
+        error: err.response.data.error,
       });
     }
   }
@@ -156,11 +158,15 @@ export default function AuthPage({ email, setEmail, setIsLoggedIn }) {
   }, [isRegistering]);
 
   return (
-    <div className="relative flex flex-row font-montserrat">
+    <div className="relative flex flex-row overflow-hidden font-montserrat">
       <AnimatePresence initial={false} mode="wait">
         {isModalOpen && (
-          <Modal
-            handleClose={() => setIsModalOpen(false)}
+          <SuccessModal
+            handleClose={() => {
+              setIsModalOpen(false);
+              navigate("/admission");
+            }}
+            title={"Registration Successful!"}
             message={modalMessage}
             modalIcon={modalIcon}
           />

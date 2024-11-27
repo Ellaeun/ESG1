@@ -6,8 +6,9 @@ import Lottie from "lottie-react";
 import checkMarkAnimation from "../assets/checkmark.json";
 import Backdrop from "./Backdrop.jsx";
 
-Modal.propTypes = {
+SuccessModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
   modalIcon: PropTypes.string.isRequired,
 };
@@ -27,7 +28,12 @@ const popIn = {
   exit: { scale: 0.9, opacity: 0 },
 };
 
-export default function Modal({ handleClose, message, modalIcon }) {
+export default function SuccessModal({
+  handleClose,
+  title,
+  message,
+  modalIcon,
+}) {
   const [animateLottie, setAnimateLottie] = useState(false);
 
   useEffect(() => {
@@ -41,8 +47,7 @@ export default function Modal({ handleClose, message, modalIcon }) {
   return (
     <Backdrop onClick={handleClose}>
       <motion.div
-        className="m-auto flex h-fit w-[90%] max-w-fit flex-col items-center justify-center gap-12 bg-primary p-12 font-bold text-tertiary q-rounded-xl md:h-80"
-        onClick={(e) => e.stopPropagation}
+        className="m-auto flex md:w-[40rem] w-10/12 max-w-fit flex-col items-center justify-center gap-12 bg-primary p-12 font-bold text-tertiary q-rounded-xl"
         variants={popIn}
         initial="hidden"
         animate="visible"
@@ -51,8 +56,9 @@ export default function Modal({ handleClose, message, modalIcon }) {
         <div className="h-20 w-20 rounded-full bg-highlight">
           {animateLottie && modalIcon === "Checkmark" && <Checkmark />}
         </div>
-        <div className="flex items-center justify-center text-center q-text-lg">
-          {message}
+        <div className="flex flex-col items-center justify-center q-gap-5 text-center">
+          <p className="q-text-2xl">{title}</p>
+          <p className="q-text-base">{message}</p>
         </div>
       </motion.div>
     </Backdrop>

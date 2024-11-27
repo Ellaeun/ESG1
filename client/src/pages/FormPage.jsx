@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
-import axios from "axios";
 
 import { useAppContext } from "../context/AppContext.jsx";
 
 import Progress from "../components/Progress.jsx";
-import Modal from "../components/Modal.jsx";
+import ActionModal from "../components/ActionModal.jsx";
+import SuccessModal from "../components/SuccessModal.jsx";
 import Combobox from "../components/Combobox.jsx";
 
 import { countries, nationalities } from "../constants/constants.jsx";
@@ -21,20 +21,18 @@ import ExaminationPrimary from "../assets/examination-primary.svg";
 import ExamResultPrimary from "../assets/exam-result-primary.svg";
 import ReqSubmissionPrimary from "../assets/req-submission-primary.svg";
 import EnrolledPrimary from "../assets/enrolled-primary.svg";
-import ArrowTertiary from "../assets/dropdown-tertiary.svg";
-import ArrowPrimary from "../assets/dropdown-primary.svg";
+import ArrowTertiary from "../assets/arrow-tertiary.svg";
+import ArrowPrimary from "../assets/arrow-primary.svg";
 
 FormPage.propTypes = {
   email: PropTypes.string.isRequired,
 };
 
 export default function FormPage({ email }) {
-  const { apiUrl } = useAppContext();
-  const [formIndex, setFormIndex] = useState(1);
-  const [modalMessage, setModalMessage] = useState(
-    "You have successfully submitted your application.",
-  );
+  const { api } = useAppContext();
+  const [formIndex, setFormIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [modalIcon, setModalIcon] = useState("Checkmark");
   const [currentProgress, setCurrentProgress] = useState({
     completed: [true, true, true, false, false],
@@ -49,56 +47,103 @@ export default function FormPage({ email }) {
     false,
   ]);
   const [formData, setFormData] = useState({
-    applicantType: "",
-    preferredProgram: "",
+    applicantType: "Transferee",
+    preferredProgram: "Bachelor of Science in Computer Science",
     //
-    givenName: "",
-    middleName: "",
-    familyName: "",
-    suffix: "",
-    sexAtBirth: "",
-    dateOfBirth: "",
-    civilStatus: "",
-    contactNum: "",
-    religion: "",
-    nationality: "",
-    addressLine1: "",
-    addressLine2: "",
-    city: "",
-    stateProvinceRegion: "",
-    postalCode: "",
-    country: "",
-    disability: "",
-    indigenousGroup: "",
+    givenName: "John",
+    middleName: "Michael",
+    familyName: "Doe",
+    suffix: "Jr.",
+    sexAtBirth: "Male",
+    dateOfBirth: "2000-01-15",
+    civilStatus: "Single",
+    contactNum: "+1234567890",
+    religion: "Christianity",
+    nationality: "Filipino",
+    addressLine1: "123 Main Street",
+    addressLine2: "Apartment 4B",
+    city: "Quezon City",
+    stateProvinceRegion: "Metro Manila",
+    postalCode: "1100",
+    country: "Philippines",
+    disability: "None",
+    indigenousGroup: "None",
     //
-    numOfSiblings: 0,
-    incomeBracket: "",
-    fatherName: "",
-    fatherContactNum: "",
-    fatherOccupation: "",
-    motherName: "",
-    motherContactNum: "",
-    motherOccupation: "",
-    guardianName: "",
-    guardianContactNum: "",
-    guardianOccupation: "",
+    numOfSiblings: 2,
+    incomeBracket: "50,000-100,000 PHP",
+    fatherName: "Michael Doe",
+    fatherContactNum: "+1234567891",
+    fatherOccupation: "Engineer",
+    motherName: "Jane Doe",
+    motherContactNum: "+1234567892",
+    motherOccupation: "Teacher",
+    guardianName: "Emily Doe",
+    guardianContactNum: "+1234567893",
+    guardianOccupation: "Retired",
     //
-    elementarySchoolName: "",
-    elementarySchoolAddress: "",
-    elementarySchoolType: "",
-    elementaryYearGraduated: 0,
-    juniorHighSchoolName: "",
-    juniorHighSchoolAddress: "",
-    juniorHighSchoolType: "",
-    juniorHighYearGraduated: 0,
-    seniorHighSchoolName: "",
-    seniorHighSchoolAddress: "",
-    seniorHighSchoolType: "",
-    seniorHighYearGraduated: 0,
-    // colegeSchoolName: "",
-    // colegeSchoolAddress: "",
-    // colegeSchoolType: "",
-    // colegeYearGraduated: undefined,
+    elementarySchoolName: "Springfield Elementary School",
+    elementarySchoolAddress: "456 Elm Street, Springfield",
+    elementarySchoolType: "Public",
+    elementaryYearGraduated: 2012,
+    juniorHighSchoolName: "Springfield Junior High School",
+    juniorHighSchoolAddress: "789 Pine Street, Springfield",
+    juniorHighSchoolType: "Private",
+    juniorHighYearGraduated: 2016,
+    seniorHighSchoolName: "Springfield Senior High School",
+    seniorHighSchoolAddress: "101 Maple Avenue, Springfield",
+    seniorHighSchoolType: "Public",
+    seniorHighYearGraduated: 2018,
+
+    //   applicantType: "",
+    //   preferredProgram: "",
+    //   //
+    //   givenName: "",
+    //   middleName: "",
+    //   familyName: "",
+    //   suffix: "",
+    //   sexAtBirth: "",
+    //   dateOfBirth: "",
+    //   civilStatus: "",
+    //   contactNum: "",
+    //   religion: "",
+    //   nationality: "",
+    //   addressLine1: "",
+    //   addressLine2: "",
+    //   city: "",
+    //   stateProvinceRegion: "",
+    //   postalCode: "",
+    //   country: "",
+    //   disability: "",
+    //   indigenousGroup: "",
+    //   //
+    //   numOfSiblings: 0,
+    //   incomeBracket: "",
+    //   fatherName: "",
+    //   fatherContactNum: "",
+    //   fatherOccupation: "",
+    //   motherName: "",
+    //   motherContactNum: "",
+    //   motherOccupation: "",
+    //   guardianName: "",
+    //   guardianContactNum: "",
+    //   guardianOccupation: "",
+    //   //
+    //   elementarySchoolName: "",
+    //   elementarySchoolAddress: "",
+    //   elementarySchoolType: "",
+    //   elementaryYearGraduated: 0,
+    //   juniorHighSchoolName: "",
+    //   juniorHighSchoolAddress: "",
+    //   juniorHighSchoolType: "",
+    //   juniorHighYearGraduated: 0,
+    //   seniorHighSchoolName: "",
+    //   seniorHighSchoolAddress: "",
+    //   seniorHighSchoolType: "",
+    //   seniorHighYearGraduated: 0,
+    //   // colegeSchoolName: "",
+    //   // colegeSchoolAddress: "",
+    //   // colegeSchoolType: "",
+    //   // colegeYearGraduated: undefined,
   });
 
   const localRef = useRef(null);
@@ -124,12 +169,21 @@ export default function FormPage({ email }) {
 
   async function submitForm() {
     try {
-      const res = await axios.post(`${apiUrl}/api/submit-application`, {
-        email,
-        formData,
-      });
+      const res = await api.post(
+        "/form/submit-application",
+        {
+          formData,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        },
+      );
+      if (res.data.accessToken)
+        localStorage.setItem("accessToken", res.data.accessToken);
 
-      setIsModalOpen(true);
+      setIsFormCompleted(true);
 
       console.log({ status: res.status, message: res.data.message });
     } catch (err) {
@@ -167,7 +221,6 @@ export default function FormPage({ email }) {
         break;
       case 2:
         proceedIndexes[formIndex] =
-          formData.indigenousGroup !== "" &&
           formData.incomeBracket !== "" &&
           formData.fatherName !== "" &&
           formData.fatherContactNum !== "" &&
@@ -184,15 +237,18 @@ export default function FormPage({ email }) {
           formData.elementarySchoolName !== "" &&
           formData.elementarySchoolAddress !== "" &&
           formData.elementarySchoolType !== "" &&
-          formData.elementaryYearGraduated !== 0 &&
+          formData.elementaryYearGraduated !== "0" &&
+          formData.elementaryYearGraduated !== "" &&
           formData.juniorHighSchoolName !== "" &&
           formData.juniorHighSchoolAddress !== "" &&
           formData.juniorHighSchoolType !== "" &&
-          formData.juniorHighYearGraduated !== 0 &&
+          formData.juniorHighYearGraduated !== "0" &&
+          formData.juniorHighYearGraduated !== "" &&
           formData.seniorHighSchoolName !== "" &&
           formData.seniorHighSchoolAddress !== "" &&
           formData.seniorHighSchoolType !== "" &&
-          formData.seniorHighYearGraduated !== 0;
+          formData.seniorHighYearGraduated !== "0" &&
+          formData.seniorHighYearGraduated !== "";
         break;
       default:
         break;
@@ -206,8 +262,8 @@ export default function FormPage({ email }) {
   }, [formIndex]);
 
   return (
-    <div className="flex h-screen w-screen bg-secondary font-montserrat">
-      <div className="absolute left-0 z-0 h-[100vh] w-[100vh] rounded-full bg-[radial-gradient(circle,_rgba(19,71,19,1),_rgba(19,71,19,0),_rgba(19,71,19,0))] opacity-60"></div>
+    <div className="relative flex h-screen w-screen overflow-hidden bg-secondary font-montserrat">
+      <div className="absolute left-0 z-0 h-[100vh] w-[100vh] rounded-full bg-[radial-gradient(circle,_rgba(19,71,19,1),_rgba(19,71,19,0),_rgba(19,71,19,0))] opacity-50"></div>
       <Progress
         currentProgress={currentProgress}
         setCurrentProgress={setCurrentProgress}
@@ -239,31 +295,72 @@ export default function FormPage({ email }) {
           },
         ]}
       >
-        <div className="flex h-screen w-full flex-col items-center pb-5 pr-10 pt-10">
+        <div className="scrollable-div flex h-screen w-full flex-col items-center overflow-y-auto pb-5 pr-10 pt-10">
           <AnimatePresence initial={false} mode="wait">
-            {isModalOpen && (
-              <Modal
+            {isModalOpen && !isFormCompleted && (
+              <ActionModal
                 handleClose={() => setIsModalOpen(false)}
-                message={modalMessage}
+                title={"Submit Application"}
+                message={
+                  <>
+                    <p className="text-red-800">
+                      Once you submit your application, your information will be
+                      locked, and no further edits will be allowed. Please
+                      review all details carefully before proceeding.
+                    </p>
+                    <br />
+                    <p>
+                      Your control number will be generated upon submission.
+                    </p>
+                  </>
+                }
+                modalIcon={modalIcon}
+                action={() => submitForm()}
+              />
+            )}
+            {isModalOpen && isFormCompleted && (
+              <SuccessModal
+                handleClose={() =>
+                  setCurrentProgress({
+                    ...currentProgress,
+                    current: "Examination",
+                  })
+                }
+                title={"Submit Application"}
+                message={
+                  <>
+                    <p className="text-red-800">
+                      Once you submit your application, your information will be
+                      locked, and no further edits will be allowed. Please
+                      review all details carefully before proceeding.
+                    </p>
+                    <br />
+                    <p>
+                      Your control number will be generated upon submission.
+                    </p>
+                  </>
+                }
                 modalIcon={modalIcon}
               />
             )}
           </AnimatePresence>
-          <div className="flex h-full w-full flex-col rounded-3xl bg-component">
+          <div
+            className={`${formIndex === 0 ? "h-full" : "h-fit"} flex w-full flex-col rounded-3xl bg-component`}
+          >
             <div className="flex items-center px-10 py-5">
               <h1 className="flex h-10 items-center text-tertiary q-text-2xl">
                 Admission Form
               </h1>
             </div>
-            <div className="flex h-full w-full flex-col overflow-hidden rounded-3xl bg-white py-5">
+            <div className="flex h-full w-full flex-col rounded-3xl bg-white py-5">
               <div
-                className="scrollable-div flex h-full w-full flex-col items-center gap-20 overflow-y-auto p-10 pb-0 text-tertiary q-gap-20 q-text-sm"
+                className="flex h-full w-full flex-col items-center gap-20 p-10 pb-0 text-tertiary q-gap-20 q-text-sm"
                 ref={localRef}
               >
                 <div className="flex h-full w-9/12 flex-col">
                   {formIndex === 0 && (
                     <div className="flex h-full w-full flex-col items-center justify-center">
-                      <h1 className="q-text-xl flex h-10 items-center text-tertiary">
+                      <h1 className="flex h-10 items-center text-tertiary q-text-xl">
                         Application Information*
                       </h1>
                       <Combobox
@@ -301,7 +398,7 @@ export default function FormPage({ email }) {
                   )}
                   {formIndex === 1 && (
                     <div className="flex w-full flex-col items-center q-gap-5">
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Personal Information<p className="text-red-700">*</p>
                       </h2>
                       <div className="flex w-full q-gap-5">
@@ -417,7 +514,7 @@ export default function FormPage({ email }) {
                         />
                       </div>
                       <div className="my-10 h-0.5 w-full rounded-full bg-tertiary" />
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Residential Address<p className="text-red-700">*</p>
                       </h2>
                       <div className="flex w-full q-gap-5">
@@ -483,7 +580,7 @@ export default function FormPage({ email }) {
                         />
                       </div>
                       <div className="my-10 h-0.5 w-full rounded-full bg-tertiary" />
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Other Information
                       </h2>
                       <div className="flex w-full q-gap-5">
@@ -510,7 +607,7 @@ export default function FormPage({ email }) {
                   )}
                   {formIndex === 2 && (
                     <div className="flex w-full flex-col items-center q-gap-5">
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Family Information<p className="text-red-700">*</p>
                       </h2>
                       <Input
@@ -541,7 +638,7 @@ export default function FormPage({ email }) {
                         placeholder="Enter your income bracket"
                       />
                       <div className="my-10 h-0.5 w-full rounded-full bg-tertiary" />
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Father&apos;s Information
                         <p className="text-red-700">*</p>
                       </h2>
@@ -573,7 +670,7 @@ export default function FormPage({ email }) {
                         placeholder="Enter your father's occupation"
                       />
                       <div className="my-10 h-0.5 w-full rounded-full bg-tertiary" />
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Mother&apos;s Information
                         <p className="text-red-700">*</p>
                       </h2>
@@ -605,7 +702,7 @@ export default function FormPage({ email }) {
                         placeholder="Enter your mother's occupation"
                       />
                       <div className="my-10 h-0.5 w-full rounded-full bg-tertiary" />
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Guardian&apos;s Information
                         <p className="text-red-700">*</p>
                       </h2>
@@ -640,7 +737,7 @@ export default function FormPage({ email }) {
                   )}
                   {formIndex === 3 && (
                     <div className="flex w-full flex-col items-center q-gap-5">
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Elementary School&apos;s Information
                         <p className="text-red-700">*</p>
                       </h2>
@@ -683,7 +780,7 @@ export default function FormPage({ email }) {
                         placeholder="Enter year graduated"
                       />
                       <div className="my-10 h-0.5 w-full rounded-full bg-tertiary" />
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Junior High School&apos;s Information
                         <p className="text-red-700">*</p>
                       </h2>
@@ -726,7 +823,7 @@ export default function FormPage({ email }) {
                         placeholder="Enter year graduated"
                       />
                       <div className="my-10 h-0.5 w-full rounded-full bg-tertiary" />
-                      <h2 className="q-text-xl flex font-bold">
+                      <h2 className="flex font-bold q-text-xl">
                         Senior High School&apos;s Information
                         <p className="text-red-700">*</p>
                       </h2>
@@ -826,20 +923,20 @@ export default function FormPage({ email }) {
                           className={`${formIndex === index ? "bg-highlight text-primary hover:bg-highlight-light hover:text-primary" : "bg-secondary text-tertiary hover:bg-tertiary/30"} h-10 w-10 rounded-xl`}
                           key={index}
                           onClick={() =>
-                            (canProceedIndexes[index - 1] || index === 0) &&
+                            canProceedIndexes[index - 1] &&
+                            index === 0 &&
                             setFormIndex(index)
                           }
                         >
                           {index + 1}
                         </button>
                       ))}
-
                     <button
-                      className={`${formIndex !== 3 && canProceedIndexes[formIndex] ? "h-10 w-10 bg-highlight" : "h-10 bg-secondary px-3 opacity-50"} flex items-center justify-center rounded-xl`}
+                      className={`${formIndex === 3 ? (canProceedIndexes[3] ? "h-10 bg-highlight px-5 text-primary" : "h-10 bg-secondary px-5 opacity-50") : canProceedIndexes[formIndex] ? "h-10 w-10 bg-highlight" : "h-10 w-10 bg-secondary opacity-50"} flex items-center justify-center rounded-xl`}
                       onClick={() =>
                         formIndex !== 3
                           ? setFormIndex(formIndex + 1)
-                          : submitForm()
+                          : setIsModalOpen(true)
                       }
                       disabled={!canProceedIndexes[formIndex]}
                     >
