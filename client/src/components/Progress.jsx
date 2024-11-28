@@ -18,7 +18,7 @@ export default function Progress({
 }) {
   return (
     <div className="z-20 flex h-screen w-screen">
-      <div className="flex h-full w-4/12 flex-col items-center gap-5 px-10 py-5 q-text-base">
+      <div className="flex h-full w-4/12 flex-col items-center gap-5 px-10 py-3 q-text-base">
         <div className="flex h-20 w-full items-center gap-6 p-4">
           <img className="w-14" src={CvsuLogo} />
           <h1 className="font-helvetica-compressed text-highlight q-text-3xl">

@@ -15,41 +15,74 @@ export function AppProvider({ children }) {
       ? import.meta.env.VITE_BACKEND_URL
       : "http://localhost:8080",
   );
-  const api = axios.create({
+  const axiosApi = axios.create({
     baseURL: apiUrl + "/api",
     withCredentials: true,
   });
-
   const [userId, setUserId] = useState();
-  const [role, setRole] = useState();
+  const [role, setRole] = useState("student");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const api = {
+    get: async (endpoint, { params }) => {
+      const accessToken = localStorage.getItem("accessToken");
+      const headers = accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : {};
+
+      const res = await axiosApi.get(endpoint, {
+        params,
+        headers,
+      });
+
+      if (res.data.accessToken && accessToken !== res.data.accessToken)
+        localStorage.setItem("accessToken", res.data.accessToken);
+
+      if (res.data.userId && res.data.role) {
+        setUserId(res.data.userId);
+        setRole(res.data.role);
+      }
+
+      return res;
+    },
+    post: async (endpoint, body) => {
+      const accessToken = localStorage.getItem("accessToken");
+      const headers = accessToken
+        ? { Authorization: `Bearer ${accessToken}` }
+        : {};
+
+      const res = await axiosApi.post(endpoint, body, {
+        headers,
+      });
+
+      if (res.data.accessToken && accessToken !== res.data.accessToken)
+        localStorage.setItem("accessToken", res.data.accessToken);
+
+      if (res.data.userId && res.data.role) {
+        setUserId(res.data.userId);
+        setRole(res.data.role);
+      }
+
+      return res;
+    },
+  };
 
   useEffect(() => {
     async function validateAccess() {
       try {
-        const res = await api.post(
-          "/auth/validate-access",
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          },<tr className="flex w-full py-5 text-center q-text-sm">
-            <td className="w-full">123</td>
-            <td className="w-full">123</td>
-            <td className="w-full">123</td>
-            <td className="w-full">123</td>
-            <td className="w-full">123</td>
-          </tr>
-        );
-        if (res.data.accesstoken)
-          localStorage.setItem("accessToken", res.data.accessToken);
-        setUserId(res.data.userId);
+        await api.post("/auth/validate-access");
 
         setIsLoggedIn(true);
 
-        navigate(role === "student" ? "/admission" : "/admin")
+        navigate(
+          role === "new"
+            ? "/admission"
+            : role === "admin"
+              ? "/admin"
+              : role === "student"
+                ? "/student"
+                : "/",
+        );
       } catch (err) {
         setUserId("");
         setIsLoggedIn(false);

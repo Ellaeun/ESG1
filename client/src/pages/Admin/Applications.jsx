@@ -1,42 +1,62 @@
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
+import { useAppContext } from "../../context/AppContext.jsx";
+
+import Table from "../../components/Table.jsx";
 import Pagination from "../../components/Pagination.jsx";
 
 Applications.propTypes = {
-  p: PropTypes.string,
+
 };
 
-export default function Applications({ p }) {
+export default function Applications() {
+  const { api } = useAppContext();
+  const [data, setData] = useState([]);
+  const [lastDate, setLastDate] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  useEffect(() => {
+    async function getApplications() {
+      try {
+        const res = await api.get("/application/get-applications", {
+          params: {
+            lastDate,
+            limit: 10,
+            page: page,
+            sort: "asc",
+          },
+        });
+  
+        setData(res.data.payload);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error({
+          status: err.response.status,
+          error: err.response.data.error,
+        });
+      }
+    }
+
+    getApplications()
+  }, [page])
+
   return (
-    <div className="h-full w-full py-5">
-      <table className="flex w-full flex-col gap-5 text-tertiary">
-        <thead className="flex w-full px-5">
-          <tr className="flex w-full rounded-2xl bg-secondary py-5 q-text-sm">
-            <th className="w-full">Full Name</th>
-            <th className="w-full">Applicant Type</th>
-            <th className="w-full">Preferred Course</th>
-            <th className="w-full">Date Submitted</th>
-            <th className="w-full">Status</th>
-          </tr>
-        </thead>
-        <tbody className="flex w-full flex-col px-5">
-          {Array(20)
-            .fill()
-            .map((_, index) => (
-              <tr
-                className="flex w-full py-4 text-center q-text-sm"
-                key={index}
-              >
-                <td className="w-full">123</td>
-                <td className="w-full">123</td>
-                <td className="w-full">123</td>
-                <td className="w-full">123</td>
-                <td className="w-full">123</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-      <Pagination />
-    </div>
+    <>
+      <Table
+        columnNames={[
+          "Full Name",
+          "Applicant Type",
+          "Applied Program",
+          "Date Submitted",
+          "Status",
+        ]}
+        data={data}
+        skipFirst={true}
+        compressedAt={null}
+      />
+      <Pagination page={page} setPage={setPage} totalPages={totalPages} />
+    </>
   );
 }

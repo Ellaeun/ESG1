@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
-import formRoutes from "./routes/formRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ server.get("/", (_, res) => {
 });
 
 server.use("/api/auth", authRoutes);
-server.use("/api/form", formRoutes);
+server.use("/api/application", applicationRoutes);
 
 server.listen(8080, () => {
 	console.log("Connected to the server.");

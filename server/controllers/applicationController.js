@@ -1,6 +1,81 @@
 import db from "../config/db.js";
 
-export async function submitApplication(req, res) {
+export async function getApplications(req, res) {
+	// receive info from user
+	const { lastDate, limit, page, sort } = req.query;
+
+	// check if user is admin
+	const { role } = req.user;
+	if (role !== "admin") return res.status(403).json({ error: "Forbidden: Access denied." });
+
+	// create query params
+	const params = [];
+
+	if (lastDate) params.push(lastDate);
+
+	params.push(parseInt(limit, 10) || 10);
+	params.push(((parseInt(page, 10) || 1) - 1) * (parseInt(limit, 10) || 10));
+
+	const columns = [
+		"applications.*",
+		"students.givenName",
+		"students.middleName",
+		"students.familyName",
+		"students.suffix",
+	];
+
+	try {
+		// query for applications
+		const [applications] = await db.query(
+			`
+				SELECT ${columns.join(", ")}
+				FROM applications
+				JOIN students
+				ON applications.userId = students.userId
+				${lastDate ? `WHERE dateSubmitted ${sort === "desc" ? "<" : ">"} ?` : ""}
+				ORDER BY dateSubmitted ${sort === "desc" ? "DESC" : "ASC"}
+				LIMIT ? OFFSET ?
+			`,
+			params
+		);
+
+		// reformat data for client
+		const payload = applications.map((application) => ({
+			userId: application.userId,
+			fullName:
+				application.familyName +
+				", " +
+				application.givenName +
+				" " +
+				application.middleName +
+				" " +
+				(application.suffix !== null ? application.suffix : ""),
+			applicantType: application.applicantType,
+			appliedProgram: application.preferredProgram,
+			dateSubmitted: application.dateSubmitted.toISOString().split("T")[0],
+			applicantStatus: application.applicantStatus,
+		}));
+
+		// count total pages
+		const [totalRecords] = await db.query(
+			`
+				SELECT COUNT(*) AS totalCount
+				FROM applications
+			`
+		);
+
+		// respond with success
+		return res
+			.status(200)
+			.json({ payload, totalPages: Math.ceil(totalRecords[0].totalCount / limit) });
+	} catch (err) {
+		// respond with error
+		console.error(err);
+		return res.status(500).json({ error: "Internal server error." });
+	}
+}
+
+export async function postApplication(req, res) {
 	// recieve info from user
 	const { formData } = req.body;
 	const { userId } = req.user;

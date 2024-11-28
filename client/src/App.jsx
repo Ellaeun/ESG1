@@ -4,8 +4,8 @@ import { useAppContext } from "./context/AppContext.jsx";
 
 import AuthPage from "./pages/AuthPage.jsx";
 import FormPage from "./pages/FormPage.jsx";
-import StudentPage from "./pages/Student/StudentPage.jsx";
-import AdminPage from "./pages/Admin/AdminPage.jsx";
+import StudentPage from "./pages/StudentPage.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {

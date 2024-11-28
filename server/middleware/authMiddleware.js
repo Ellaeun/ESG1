@@ -21,11 +21,10 @@ function getNewAccessToken(req, res, next) {
 		);
 
 		res.setHeader("Authorization", `Bearer ${newAccessToken}`);
+
 		res.json({ accessToken: newAccessToken });
 
-		req.user = { userId: decodedRefreshToken.userId };
-
-		return next();
+		req.user = decodedRefreshToken;
 	} catch (err) {
 		return res.status(403).json({ error: "Forbidden: Invalid or expired token." });
 	}

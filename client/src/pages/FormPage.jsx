@@ -24,11 +24,9 @@ import EnrolledPrimary from "../assets/enrolled-primary.svg";
 import ArrowTertiary from "../assets/arrow-tertiary.svg";
 import ArrowPrimary from "../assets/arrow-primary.svg";
 
-FormPage.propTypes = {
-  email: PropTypes.string.isRequired,
-};
+FormPage.propTypes = {};
 
-export default function FormPage({ email }) {
+export default function FormPage() {
   const { api } = useAppContext();
   const [formIndex, setFormIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -169,17 +167,9 @@ export default function FormPage({ email }) {
 
   async function submitForm() {
     try {
-      const res = await api.post(
-        "/form/submit-application",
-        {
-          formData,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
-        },
-      );
+      const res = await api.post("/application/post-application", {
+        formData,
+      });
       if (res.data.accessToken)
         localStorage.setItem("accessToken", res.data.accessToken);
 
@@ -263,7 +253,7 @@ export default function FormPage({ email }) {
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-secondary font-montserrat">
-      <div className="absolute left-0 z-0 h-[100vh] w-[100vh] rounded-full bg-[radial-gradient(circle,_rgba(19,71,19,1),_rgba(19,71,19,0),_rgba(19,71,19,0))] opacity-50"></div>
+      <div className="absolute left-0 z-0 h-[100vh] w-[100vh] rounded-full bg-[radial-gradient(circle,_rgba(19,71,19,0.80),_rgba(19,71,19,0),_rgba(19,71,19,0))] opacity-55"></div>
       <Progress
         currentProgress={currentProgress}
         setCurrentProgress={setCurrentProgress}
@@ -295,7 +285,7 @@ export default function FormPage({ email }) {
           },
         ]}
       >
-        <div className="scrollable-div flex h-screen w-full flex-col items-center overflow-y-auto pb-5 pr-10 pt-10">
+        <div className="scrollable-div flex h-screen w-full flex-col items-center overflow-y-auto pb-5 pr-10 pt-11">
           <AnimatePresence initial={false} mode="wait">
             {isModalOpen && !isFormCompleted && (
               <ActionModal
@@ -348,7 +338,7 @@ export default function FormPage({ email }) {
             className={`${formIndex === 0 ? "h-full" : "h-fit"} flex w-full flex-col rounded-3xl bg-component`}
           >
             <div className="flex items-center px-10 py-5">
-              <h1 className="flex h-10 items-center text-tertiary q-text-2xl">
+              <h1 className="flex items-center text-tertiary q-text-xl">
                 Admission Form
               </h1>
             </div>
