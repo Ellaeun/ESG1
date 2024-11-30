@@ -147,7 +147,7 @@ export default function AcademicRecord() {
   // }, [page])
 
   return (
-    <>
+    <div className="w-full">
       <Table
         columnNames={[
           "Course Code",
@@ -161,6 +161,6 @@ export default function AcademicRecord() {
         compressedAt={2}
       />
       <Pagination page={page} setPage={setPage} totalPages={totalPages} />
-    </>
+    </div>
   );
 }

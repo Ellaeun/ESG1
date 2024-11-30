@@ -20,8 +20,8 @@ export function AppProvider({ children }) {
     withCredentials: true,
   });
   const [userId, setUserId] = useState();
-  const [role, setRole] = useState("admin");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState("student");
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const navigate = useNavigate();
   const api = {
     get: async (endpoint, { params }) => {
@@ -95,7 +95,7 @@ export function AppProvider({ children }) {
       }
     }
 
-    validateAccess();
+    // validateAccess();
   }, []);
 
   return (

@@ -13,6 +13,7 @@ Combobox.propTypes = {
   setValue: PropTypes.func.isRequired,
   type: PropTypes.string.isRequired,
   attr: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default function Combobox({
@@ -23,8 +24,9 @@ export default function Combobox({
   name,
   value,
   setValue,
-	type,
+  type,
   attr,
+  disabled,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [hasJustOpened, setHasJustOpened] = useState(false);
@@ -75,20 +77,22 @@ export default function Combobox({
   }, []);
 
   return (
-    <div className={`${attr} flex flex-col`}>
+    <div className={`${attr} flex flex-col q-text-sm`}>
       <div className="flex justify-between p-1">
         <p className="">{labelText}</p>
       </div>
       <div className="relative flex items-center justify-end" ref={dropdownRef}>
-        <img
-          className="cursor absolute w-11 p-4 hover:brightness-200"
-          src={DropdownTertiary}
-          onClick={() => {
-            setIsOpen(!isOpen);
-            setHasJustOpened(true);
-          }}
-        />
-        {isOpen && (
+        {!disabled && (
+          <img
+            className="cursor absolute w-11 p-4 hover:brightness-200"
+            src={DropdownTertiary}
+            onClick={() => {
+              setIsOpen(!isOpen);
+              setHasJustOpened(true);
+            }}
+          />
+        )}
+        {isOpen && !disabled && (
           <div className="absolute top-full z-10 mt-2 flex h-fit max-h-[30vh] w-full bg-tertiary/60 p-2 pr-0 backdrop-blur q-rounded-xl">
             <div className="scrollable-div flex w-full flex-col overflow-y-scroll">
               {items
@@ -118,10 +122,10 @@ export default function Combobox({
           </div>
         )}
         <input
-          className={`${!isSearchable ? "cursor-default" : "focus:bg-primary"} w-full bg-secondary p-3 q-text-sm q-rounded-xl `}
+          className={`${!isSearchable ? "cursor-default" : "focus:bg-primary"} w-full bg-secondary p-3 q-text-sm q-rounded-xl`}
           placeholder={placeholder}
           autoComplete="off"
-					type={type}
+          type={type}
           name={name}
           value={value}
           onChange={(e) => handleChangeValue(e, "typed")}
@@ -131,6 +135,7 @@ export default function Combobox({
           }}
           ref={dropdownInputRef}
           readOnly={!isSearchable}
+          disabled={disabled}
         />
       </div>
     </div>

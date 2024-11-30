@@ -1,5 +1,7 @@
-import React from "react"
+import React from "react";
 import PropTypes from "prop-types";
+
+import { useAppContext } from "../context/AppContext.jsx";
 
 import CvsuLogo from "../assets/cvsu-logo.png";
 
@@ -11,13 +13,17 @@ Nav.propTypes = {
 };
 
 export default function Nav({ children, currentTab, setCurrentTab, tabs }) {
+  const { role } = useAppContext();
+
   return (
     <div className="z-20 flex h-full w-full">
-      <div className="flex h-full w-4/12 flex-col items-center gap-5 px-10 py-3 q-text-base">
+      <div className="flex h-full w-4/12 flex-col items-center gap-5 px-10 pb-5 pt-3 q-text-base">
         <div className="flex h-20 w-full items-center gap-6 p-4">
           <img className="w-14" src={CvsuLogo} />
-          <h1 className="q-text-3xl font-helvetica-compressed text-highlight">
-            Admission
+          <h1 className="font-helvetica-compressed text-highlight q-text-3xl">
+            {role === "new" && "Admission"}
+            {role === "student" && "Student Dashboard"}
+            {role === "admin" && "Admin Dashboard"}
           </h1>
         </div>
         {tabs.map((tab, index) => (

@@ -4,9 +4,9 @@ import ArrowTertiary from "../assets/arrow-tertiary.svg";
 import ArrowPrimary from "../assets/arrow-primary.svg";
 
 Pagination.propTypes = {
-  page: PropTypes.int,
-  setPage: PropTypes.func,
-  totalPages: PropTypes.int,
+  page: PropTypes.number.isRequired,
+  setPage: PropTypes.func.isRequired,
+  totalPages: PropTypes.number.isRequired,
 };
 
 export default function Pagination({ page, setPage, totalPages }) {

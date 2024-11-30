@@ -33,7 +33,7 @@ export default function AdminPage() {
     "Returning",
     "Waitlist",
     "Appointments",
-    "Enrollment Settigns",
+    "Enrollment Settings",
   ];
   const studentRecordsSubTabs = [
     "Current Students",
@@ -101,7 +101,7 @@ export default function AdminPage() {
           <div className="flex h-fit w-full">
             <div className="flex h-fit w-full flex-col rounded-3xl bg-component">
               <div className="flex items-center justify-between overflow-hidden px-5">
-                <div className="flex gap-5 p-5 py-2 pl-5">
+                <div className="flex gap-5 py-2 pl-10 pr-5">
                   {currentTab === "Manage Enrollment" &&
                     manageEnrollmentSubTabs.map((subTab, index) => (
                       <button

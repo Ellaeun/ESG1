@@ -6,14 +6,14 @@ Table.propTypes = {
   columnNames: PropTypes.array.isRequired,
   data: PropTypes.array.isRequired,
   skipFirst: PropTypes.bool.isRequired,
-  compressedAt: PropTypes.int,
+  compressedAt: PropTypes.number.isRequired,
 };
 
 export default function Table({ columnNames, data, skipFirst, compressedAt }) {
   return (
     <table className="flex w-full flex-col gap-5 text-tertiary">
       <thead className="flex w-full">
-        <tr className="flex w-full rounded-2xl bg-secondary q-text-sm">
+        <tr className="flex w-full items-center rounded-2xl bg-secondary q-text-sm">
           {columnNames.map((name, index) =>
             index !== compressedAt ? (
               <th className="w-full py-5" key={index}>
@@ -38,7 +38,7 @@ export default function Table({ columnNames, data, skipFirst, compressedAt }) {
       <tbody className="flex w-full flex-col">
         {data.map((row, rowIndex) => (
           <tr
-            className="flex w-full cursor-pointer rounded-t-2xl border-b-2 py-4 text-center q-text-sm hover:bg-secondary"
+            className="flex w-full cursor-pointer items-center rounded-t-2xl border-b-2 py-4 text-center q-text-sm hover:bg-secondary"
             key={rowIndex}
             onClick={() => {}}
           >

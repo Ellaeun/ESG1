@@ -9,7 +9,7 @@ Waitlist.propTypes = {
 
 export default function Waitlist({ p }) {
   return (
-    <div className="h-full w-full py-5">
+    <div className="h-full w-full">
       <Table
         columnNames={[
           "Full Name",
