@@ -1,9 +1,25 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
+import db from "../config/db.js";
+
 dotenv.config();
 
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
+
+async function checkIfUserExists(userId) {
+	const [user] = await db.query(
+		`
+			SELECT 1
+			FROM users
+			WHERE userId = ?
+			`,
+		[userId] // value
+	);
+
+	// respond with error
+	if (user.length === 0) return res.status(401).json({ error: "Invalid token credentials." });
+}
 
 function getNewAccessToken(req, res, next) {
 	const refreshToken = req.cookies.refreshToken;
@@ -25,6 +41,8 @@ function getNewAccessToken(req, res, next) {
 		res.json({ accessToken: newAccessToken });
 
 		req.user = decodedRefreshToken;
+		
+		checkIfUserExists(req.user.userId)
 	} catch (err) {
 		return res.status(403).json({ error: "Forbidden: Invalid or expired token." });
 	}
@@ -38,6 +56,8 @@ export default function authMiddleware(req, res, next) {
 		const decodedAccessToken = jwt.verify(accessToken, ACCESS_TOKEN_SECRET);
 
 		req.user = decodedAccessToken;
+
+		checkIfUserExists(req.user.userId)
 
 		next();
 	} catch (err) {

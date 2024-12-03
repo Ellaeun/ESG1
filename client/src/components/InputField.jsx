@@ -28,7 +28,7 @@ export default function InputField({
     <div className={`${attr} flex flex-col q-text-sm`}>
       <p className="p-1">{labelText}</p>
       <input
-        className="bg-secondary p-3 q-rounded-xl focus:bg-primary"
+        className="bg-secondary p-3 placeholder-slate-600/60 q-rounded-xl focus:bg-white"
         placeholder={placeholder}
         type={type}
         name={name}

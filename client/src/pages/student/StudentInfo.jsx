@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+
+import { useAppContext } from "../../context/AppContext.jsx";
 
 import Information from "../../components/Information.jsx";
 
@@ -9,6 +11,7 @@ StudentInfo.propTypes = {
 };
 
 export default function StudentInfo({ currentSubTab, studentInfoSubTabs }) {
+  const { api } = useAppContext();
   const [studentInfo, setStudentInfo] = useState({
     applicantType: "Transferee",
     preferredProgram: "Bachelor of Science in Computer Science",
@@ -57,9 +60,74 @@ export default function StudentInfo({ currentSubTab, studentInfoSubTabs }) {
     seniorHighSchoolType: "Public",
     seniorHighYearGraduated: 2018,
   });
-  console.log(currentSubTab);
-  console.log(studentInfoSubTabs);
-  console.log(studentInfo);
+
+  useEffect(() => {
+    async function getStudentInfo() {
+      try {
+        const res = await api.get("/application/get-student-info", {});
+
+        const info = res.data.info;
+        setStudentInfo({
+          givenName: info.givenName,
+          middleName: info.middleName,
+          familyName: info.familyName,
+          suffix: info.suffix,
+          sexAtBirth: info.sexAtBirth,
+          dateOfBirth: info.dateOfBirth,
+          civilStatus: info.civilStatus,
+          contactNum: info.contactNum,
+          religion: info.religion,
+          nationality: info.nationality,
+          addressLine1: info.addressLine1,
+          addressLine2: info.addressLine2,
+          city: info.city,
+          stateProvinceRegion: info.stateProvinceRegion,
+          postalCode: info.postalCode,
+          country: info.country,
+          disability: info.disability,
+          indigenousGroup: info.indigenousGroup,
+          academicStatus: info.academicStatus,
+          program: info.program,
+          profileImageLink: info.profileImageLink,
+          //
+          numOfSiblings: info.numOfSiblings,
+          incomeBracket: info.incomeBracket,
+          fatherName: info.fatherName,
+          fatherContactNum: info.fatherContactNum,
+          fatherOccupation: info.fatherOccupation,
+          motherName: info.motherName,
+          motherContactNum: info.motherContactNum,
+          motherOccupation: info.motherOccupation,
+          guardianName: info.guardianName,
+          guardianContactNum: info.guardianContactNum,
+          guardianOccupation: info.guardianOccupation,
+          //
+          elementarySchoolName: info.elementarySchoolName,
+          elementarySchoolAddress: info.elementarySchoolAddress,
+          elementarySchoolType: info.elementarySchoolType,
+          elementaryYearGraduated: info.elementaryYearGraduated,
+          juniorHighSchoolName: info.juniorHighSchoolName,
+          juniorHighSchoolAddress: info.juniorHighSchoolAddress,
+          juniorHighSchoolType: info.juniorHighSchoolType,
+          juniorHighYearGraduated: info.juniorHighYearGraduated,
+          seniorHighSchoolName: info.seniorHighSchoolName,
+          seniorHighSchoolAddress: info.seniorHighSchoolAddress,
+          seniorHighSchoolType: info.seniorHighSchoolType,
+          seniorHighYearGraduated: info.seniorHighYearGraduated,
+        });
+
+        console.log({ status: res.status, message: res.data.message });
+      } catch (err) {
+        console.error({
+          status: err.response.status,
+          message: err.response.data.error,
+        });
+      }
+    }
+
+    getStudentInfo();
+  }, []);
+
   return (
     <div className="flex w-9/12 pb-5 pt-10">
       <Information

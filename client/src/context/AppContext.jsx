@@ -57,7 +57,6 @@ export function AppProvider({ children }) {
 
       if (res.data.accessToken && accessToken !== res.data.accessToken)
         localStorage.setItem("accessToken", res.data.accessToken);
-
       if (res.data.userId && res.data.role) {
         setUserId(res.data.userId);
         setRole(res.data.role);
@@ -67,36 +66,38 @@ export function AppProvider({ children }) {
     },
   };
 
-  useEffect(() => {
-    async function validateAccess() {
-      try {
-        await api.post("/auth/validate-access");
+  // useEffect(() => {
+  //   async function validateAccess() {
+  //     try {
+  //       await api.post("/auth/validate-access");
 
-        setIsLoggedIn(true);
+  //       setIsLoggedIn(true);
+  //     } catch (err) {
+  //       setUserId("");
+  //       setIsLoggedIn(false);
+  //       navigate("/");
 
-        navigate(
-          role === "new"
-            ? "/admission"
-            : role === "admin"
-              ? "/admin"
-              : role === "student"
-                ? "/student"
-                : "/",
-        );
-      } catch (err) {
-        setUserId("");
-        setIsLoggedIn(false);
-        navigate("/");
+  //       console.error({
+  //         status: err.response.status,
+  //         error: err.response.data.error,
+  //       });
+  //     }
+  //   }
 
-        console.error({
-          status: err.response.status,
-          error: err.response.data.error,
-        });
-      }
-    }
+  //   validateAccess();
+  // }, []);
 
-    // validateAccess();
-  }, []);
+  // useEffect(() => {
+  //   navigate(
+  //     role === "New"
+  //       ? "/application"
+  //       : role === "Admin"
+  //         ? "/admin"
+  //         : role === "Student"
+  //           ? "/student"
+  //           : "/",
+  //   );
+  // }, [role]);
 
   return (
     <AppContext.Provider

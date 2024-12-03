@@ -6,7 +6,7 @@ import InputField from "../components/InputField.jsx";
 import { countries, nationalities } from "../constants/constants.jsx";
 
 Information.propTypes = {
-  data: PropTypes.array.isRequired,
+  data: PropTypes.object.isRequired,
   handleChange: PropTypes.func.isRequired,
   criteria: PropTypes.array.isRequired,
   value: PropTypes.node.isRequired,
@@ -22,7 +22,32 @@ export default function Information({
 }) {
   return (
     <>
-      {value === criteria[0] && criteria.length > 3 && (
+      {value === "Student Information" && (
+        <div className="flex flex-col gap-5 items-center justify-center w-full">
+          <div className="h-40 w-40 rounded-full bg-secondary"></div>
+          <InputField
+              labelText="Academic Status"
+              placeholder=""
+              name="academicStatus"
+              value={data.academicStatus}
+              setValue={handleChange}
+              type="text"
+              attr="w-full"
+              disabled={disabled}
+            />
+            <InputField
+              labelText="Program"
+              placeholder=""
+              name="program"
+              value={data.program}
+              setValue={handleChange}
+              type="text"
+              attr="w-full"
+              disabled={disabled}
+            />
+        </div>
+      )}
+      {value === criteria[0] && criteria[0] !== "Student Information" && (
         <div className="flex h-full w-full flex-col items-center justify-center">
           <h1 className="flex h-10 items-center text-tertiary q-text-xl">
             Application Information*
@@ -62,7 +87,7 @@ export default function Information({
           />
         </div>
       )}
-      {value === criteria[1 - (criteria.length === 3 && 1)] && (
+      {value === criteria[1] && (
         <div className="flex w-full flex-col items-center q-gap-5">
           <h2 className="flex font-bold q-text-xl">
             Personal Information<p className="text-red-700">*</p>
@@ -281,7 +306,7 @@ export default function Information({
           </div>
         </div>
       )}
-      {value === criteria[2 - (criteria.length === 3 && 1)] && (
+      {value === criteria[2] && (
         <div className="flex w-full flex-col items-center q-gap-5">
           <h2 className="flex font-bold q-text-xl">
             Family Information<p className="text-red-700">*</p>
@@ -422,7 +447,7 @@ export default function Information({
           />
         </div>
       )}
-      {value === criteria[3 - (criteria.length === 3 && 1)] && (
+      {value === criteria[3] && (
         <div className="flex w-full flex-col items-center q-gap-5">
           <h2 className="flex font-bold q-text-xl">
             Elementary School&apos;s Information

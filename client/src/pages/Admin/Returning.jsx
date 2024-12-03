@@ -32,7 +32,7 @@ export default function Returning({ p }) {
         columnNames={[
           "Full Name",
           "Academic Status",
-          "Course",
+          "Program",
           "Year Standing",
         ]}
         data={data}

@@ -14,7 +14,7 @@ export default function Waitlist({ p }) {
         columnNames={[
           "Full Name",
           "Applicant Type",
-          "Preferred Course",
+          "Preferred Program",
           "Date Submitted",
         ]}
         data={[]}

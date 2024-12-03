@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
+import appointmentRoutes from "./routes/appointmentRoutes.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ server.get("/", (_, res) => {
 
 server.use("/api/auth", authRoutes);
 server.use("/api/application", applicationRoutes);
+server.use("/api/appointment", appointmentRoutes);
 
 server.listen(8080, () => {
 	console.log("Connected to the server.");
