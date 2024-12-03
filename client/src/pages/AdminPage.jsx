@@ -92,7 +92,7 @@ export default function AdminPage() {
         ]}
       >
         <div className="scrollable-div flex h-full w-full flex-col gap-5 overflow-y-scroll py-5 pr-10 text-tertiary">
-          <div className="flex items-center justify-between rounded-3xl bg-white px-5 py-4 q-text-base">
+          <div className="flex items-center justify-between rounded-3xl bg-white px-5 py-4 q-text-xl">
             <p className="px-5">Search</p>
             <div className="flex gap-2">
               <button className="border border-tertiary p-3 q-rounded-xl hover:bg-secondary">
@@ -105,8 +105,8 @@ export default function AdminPage() {
           </div>
           <div className="flex h-fit w-full">
             <div className="flex h-fit w-full flex-col rounded-3xl bg-component">
-              <div className="flex items-center justify-between overflow-hidden px-5">
-                <div className="flex gap-5 py-2 pl-10 pr-5">
+              <div className="flex items-center justify-between overflow-hidden">
+                <div className="flex gap-8 py-2 pl-10 pr-5 q-text-lg">
                   {currentTab === "Manage Enrollment" &&
                     manageEnrollmentSubTabs.map((subTab, index) => (
                       <button

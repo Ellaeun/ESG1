@@ -21,9 +21,9 @@ export default function Nav({ children, currentTab, setCurrentTab, tabs }) {
         <div className="flex h-20 w-full items-center gap-6 p-4">
           <img className="w-14" src={CvsuLogo} />
           <h1 className="font-helvetica-compressed text-highlight q-text-3xl">
-            {role === "new" && "Admission"}
-            {role === "student" && "Student Dashboard"}
-            {role === "admin" && "Admin Dashboard"}
+            {role === "New" && "Admission"}
+            {role === "Student" && "Student Dashboard"}
+            {role === "Admin" && "Admin Dashboard"}
           </h1>
         </div>
         {tabs.map((tab, index) => (
@@ -37,10 +37,12 @@ export default function Nav({ children, currentTab, setCurrentTab, tabs }) {
               key={index}
             >
               <img
-                className="w-6"
-                src={
-                  currentTab === tab.name ? tab.iconPrimary : tab.iconTertiary
-                }
+                className={`${currentTab === tab.name ? "block" : "hidden"} w-6`}
+                src={tab.iconPrimary}
+              />
+              <img
+                className={`${currentTab === tab.name ? "hidden" : "block"} w-6`}
+                src={tab.iconTertiary}
               />
               <h2
                 className={`${currentTab === tab.name ? "text-primary" : "text-tertiary"}`}

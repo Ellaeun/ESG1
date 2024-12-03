@@ -122,7 +122,7 @@ export default function Combobox({
           </div>
         )}
         <input
-          className={`${!isSearchable ? "cursor-default" : "focus:bg-primary"} w-full bg-secondary p-3 q-text-sm q-rounded-xl`}
+          className={`${!isSearchable ? "cursor-default" : "focus:bg-primary"} w-full bg-secondary p-3 placeholder-slate-600/60 q-text-sm q-rounded-xl`}
           placeholder={placeholder}
           autoComplete="off"
           type={type}

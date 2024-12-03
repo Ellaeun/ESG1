@@ -9,7 +9,7 @@ import Backdrop from "./Backdrop.jsx";
 SuccessModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.element.isRequired,
   modalIcon: PropTypes.string.isRequired,
 };
 
@@ -58,7 +58,7 @@ export default function SuccessModal({
         </div>
         <div className="flex flex-col items-center justify-center q-gap-5 text-center">
           <p className="q-text-2xl">{title}</p>
-          <p className="q-text-base">{message}</p>
+          <div className="q-text-base">{message}</div>
         </div>
       </motion.div>
     </Backdrop>

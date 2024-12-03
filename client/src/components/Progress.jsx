@@ -30,7 +30,7 @@ export default function Progress({
             {currentProgress.current === tab.name && index !== 0 && (
               <div className="h-1/6 w-2 rounded-full bg-tertiary" />
             )}
-            <button
+            <div
               className={`${currentProgress.current === tab.name ? "bg-highlight" : currentProgress.completed[index] ? "bg-tertiary" : "bg-component"} flex w-full items-center gap-4 rounded-3xl px-8 py-6`}
               onClick={() =>
                 setCurrentProgress({ ...currentProgress, current: tab.name })
@@ -57,7 +57,7 @@ export default function Progress({
               >
                 {tab.name}
               </h2>
-            </button>
+            </div>
           </React.Fragment>
         ))}
         <div className="h-full w-full rounded-3xl bg-component" />

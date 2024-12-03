@@ -98,7 +98,7 @@ export default function AuthPage({ setUserId, setIsLoggedIn }) {
 
       console.error({
         status: err.response.status,
-        message: err.response.data.message,
+        message: err.response.data.error,
       });
     }
   }
@@ -167,7 +167,7 @@ export default function AuthPage({ setUserId, setIsLoggedIn }) {
               navigate("/admission");
             }}
             title={"Registration Successful!"}
-            message={modalMessage}
+            message={<>{modalMessage}</>}
             modalIcon={modalIcon}
           />
         )}
