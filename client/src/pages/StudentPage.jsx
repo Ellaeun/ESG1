@@ -8,11 +8,11 @@ import StudentInfo from "./student/StudentInfo.jsx";
 
 import AcademicRecordTertiary from "../assets/academic-record-tertiary.svg";
 import StudentInfoTertiary from "../assets/student-info-tertiary.svg";
-import EnrollNowTertiary from "../assets/enroll-now-tertiary.svg";
+import CourseEnrollmentTertiary from "../assets/course-enrollment-tertiary.svg";
 import LogOutTertiary from "../assets/log-out-tertiary.svg";
 import AcademicRecordPrimary from "../assets/academic-record-primary.svg";
 import StudentInfoPrimary from "../assets/student-info-primary.svg";
-import EnrollNowPrimary from "../assets/enroll-now-primary.svg";
+import CourseEnrollmentPrimary from "../assets/course-enrollment-primary.svg";
 import LogOutPrimary from "../assets/log-out-primary.svg";
 import SearchTertiary from "../assets/search-tertiary.svg";
 import SortTertiary from "../assets/sort-tertiary.svg";
@@ -24,18 +24,23 @@ export default function StudentPage() {
   const [currentTab, setCurrentTab] = useState("Academic Record");
   const [currentSubTab, setCurrentSubTab] = useState("None");
   const studentInfoSubTabs = [
+    "Student Information",
     "Personal Information",
     "Family Information",
     "Education Information",
   ];
+  const courseEnrollmentSubTabs = ["Grade Evaluation", "Appointment Request"];
 
   useEffect(() => {
     switch (currentTab) {
       case "Academic Record":
         setCurrentSubTab("None");
         break;
-      case "Student Info":
-        setCurrentSubTab("Personal Information");
+      case "Student Information":
+        setCurrentSubTab("Student Information");
+        break;
+      case "Course Enrollment":
+        setCurrentSubTab("Grade Evaluation");
         break;
     }
   }, [currentTab]);
@@ -55,12 +60,12 @@ export default function StudentPage() {
           {
             iconTertiary: StudentInfoTertiary,
             iconPrimary: StudentInfoPrimary,
-            name: "Student Info",
+            name: "Student Information",
           },
           {
-            iconTertiary: EnrollNowTertiary,
-            iconPrimary: EnrollNowPrimary,
-            name: "Enroll Now",
+            iconTertiary: CourseEnrollmentTertiary,
+            iconPrimary: CourseEnrollmentPrimary,
+            name: "Course Enrollment",
           },
           {
             iconTertiary: LogOutTertiary,
@@ -99,7 +104,7 @@ export default function StudentPage() {
               {currentTab === "Academic Record" && (
                 <div className="flex items-center justify-between overflow-hidden px-5">
                   <div className="flex items-center gap-5 p-5 py-2 pl-5">
-                    <h1 className="py-3 q-text-xl">Year 1 Sem 1</h1>
+                    <h1 className="py-3 q-text-base">Year 1 Sem 1</h1>
                     <div className="flex gap-2">
                       <button className="h-fit w-fit border border-tertiary p-3 q-rounded-xl hover:bg-white">
                         <img className="w-3 rotate-90" src={ArrowTertiary} />
@@ -114,9 +119,25 @@ export default function StudentPage() {
                   </button>
                 </div>
               )}
-              {currentTab === "Student Info" && (
-                <div className="flex gap-5 py-2 pl-10 pr-5">
+              {currentTab === "Student Information" && (
+                <div className="flex gap-5 py-2 pl-10 pr-5 q-text-base">
                   {studentInfoSubTabs.map((subTab, index) => (
+                    <button
+                      className="py-3 text-tertiary hover:text-tertiary/80"
+                      onClick={() => setCurrentSubTab(subTab)}
+                      key={index}
+                    >
+                      {subTab}
+                      <div
+                        className={`${currentSubTab === subTab ? "visible" : "invisible"} h-1 w-full rounded-full bg-tertiary`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+              {currentTab === "Course Enrollment" && (
+                <div className="flex gap-5 py-2 pl-10 pr-5 q-text-base">
+                  {courseEnrollmentSubTabs.map((subTab, index) => (
                     <button
                       className="py-3 text-tertiary hover:text-tertiary/80"
                       onClick={() => setCurrentSubTab(subTab)}
@@ -132,7 +153,7 @@ export default function StudentPage() {
               )}
               <div className="flex h-full w-full justify-center rounded-3xl bg-white p-5">
                 {currentTab === "Academic Record" && <AcademicRecord />}
-                {currentTab === "Student Info" && (
+                {currentTab === "Student Information" && (
                   <StudentInfo
                     currentSubTab={currentSubTab}
                     studentInfoSubTabs={studentInfoSubTabs}
@@ -146,3 +167,4 @@ export default function StudentPage() {
     </div>
   );
 }
+

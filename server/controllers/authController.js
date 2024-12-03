@@ -50,7 +50,7 @@ export async function register(req, res) {
 			INSERT INTO users (email, password, role)
 			VALUES (?, ?, ?)
 			`,
-			[email, hashedPassword, "student"] // values
+			[email, hashedPassword, "new"] // values
 		);
 
 		// respond with success
@@ -112,9 +112,10 @@ export async function signIn(req, res) {
 	}
 }
 
-export function validateAccess(req, res) {
+export async function validateAccess(req, res) {
 	const { userId, role } = req.user;
-	if (!userId || !role) return res.status(401).json({ error: "Invalid token, user not authenticated." });
+	if (!userId || !role)
+		return res.status(401).json({ error: "Invalid token, user not authenticated." });
 
 	return res.status(200).json({ userId, role, message: "Access validated." });
 }

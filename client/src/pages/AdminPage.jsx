@@ -87,7 +87,7 @@ export default function AdminPage() {
         ]}
       >
         <div className="scrollable-div flex h-full w-full flex-col gap-5 overflow-y-scroll py-5 pr-10 text-tertiary">
-          <div className="flex items-center justify-between rounded-3xl bg-white px-5 py-4 q-text-base">
+          <div className="flex items-center justify-between rounded-3xl bg-white px-5 py-4 q-text-xl">
             <p className="px-5">Search</p>
             <div className="flex gap-2">
               <button className="border border-tertiary p-3 q-rounded-xl hover:bg-secondary">

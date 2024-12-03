@@ -5,9 +5,12 @@ import PropTypes from "prop-types";
 import { useAppContext } from "../context/AppContext.jsx";
 
 import Progress from "../components/Progress.jsx";
-import InformationForm from "../components/Information.jsx";
 import ActionModal from "../components/ActionModal.jsx";
 import SuccessModal from "../components/SuccessModal.jsx";
+
+import ApplicationSubmission from "./application/ApplicationSubmission.jsx";
+import DocumentVerification from "./application/DocumentVerification.jsx";
+import EntranceExamination from "./application/EntranceExamination.jsx";
 
 import AdmissionFormTertiary from "../assets/admission-form-tertiary.svg";
 import ExaminationTertiary from "../assets/examination-tertiary.svg";
@@ -19,21 +22,25 @@ import ExaminationPrimary from "../assets/examination-primary.svg";
 import ExamResultPrimary from "../assets/exam-result-primary.svg";
 import ReqSubmissionPrimary from "../assets/req-submission-primary.svg";
 import EnrolledPrimary from "../assets/enrolled-primary.svg";
-import ArrowTertiary from "../assets/arrow-tertiary.svg";
-import ArrowPrimary from "../assets/arrow-primary.svg";
 
-FormPage.propTypes = {};
+ApplicationPage.propTypes = {};
 
-export default function FormPage() {
+export default function ApplicationPage() {
   const { api } = useAppContext();
   const [formIndex, setFormIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isFormCompleted, setIsFormCompleted] = useState(false);
-  const [modalIcon, setModalIcon] = useState("Checkmark");
+  const [controlNum, setControlNum] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [docsVerificationDate, setDocsVerificationDate] = useState("");
   const [currentProgress, setCurrentProgress] = useState({
-    completed: [true, true, true, false, false],
-    current: "Admission Form",
+    completed: [true, false, false, false, false],
+    current: "Application Submission",
   });
+  const [isFormCompleted, setIsFormCompleted] = useState(false);
+  // modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [actionModalSettings, setActionModalSettings] = useState({});
+  const [successModalSettings, setSuccessModalSettings] = useState({});
+  const [modalIcon, setModalIcon] = useState("Checkmark");
   const [canProceedIndexes, setCanProceedIndexes] = useState([
     false,
     false,
@@ -42,6 +49,7 @@ export default function FormPage() {
     false,
     false,
   ]);
+  //
   const [formData, setFormData] = useState({
     applicantType: "Transferee",
     preferredProgram: "Bachelor of Science in Computer Science",
@@ -157,6 +165,14 @@ export default function FormPage() {
     });
   }
 
+  function handleClose(completed, current) {
+    setIsModalOpen(false);
+    setCurrentProgress({
+      completed,
+      current,
+    });
+  }
+
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -168,11 +184,17 @@ export default function FormPage() {
       const res = await api.post("/application/post-application", {
         formData,
       });
-      if (res.data.accessToken)
-        localStorage.setItem("accessToken", res.data.accessToken);
 
       setIsFormCompleted(true);
-
+      setControlNum(res.data.controlNum);
+      setFullName(
+        formData.givenName +
+          " " +
+          formData.middleName +
+          " " +
+          formData.familyName +
+          (formData.suffix !== null ? " " + formData.suffix : ""),
+      );
       console.log({ status: res.status, message: res.data.message });
     } catch (err) {
       console.error({
@@ -249,9 +271,90 @@ export default function FormPage() {
     scrollToTop();
   }, [formIndex]);
 
+  useEffect(() => {
+    switch (currentProgress) {
+      case "Application Submission":
+        setActionModalSettings({
+          title: "Submit Application",
+          message: (
+            <>
+              <p className="text-red-800">
+                Once you submit your application, your information will be
+                locked, and no further edits will be allowed. Please review all
+                details carefully before proceeding.
+              </p>
+              <br />
+              <p>Your control number will be generated upon submission.</p>
+            </>
+          ),
+          action: () => submitForm(),
+        });
+        setSuccessModalSettings({
+          handleClose: () =>
+            handleClose(
+              [true, true, false, false, false],
+              "Document Verification",
+            ),
+          title: "Application Submitted!",
+          message: <p>Your control number is {controlNum}</p>,
+        });
+        break;
+      case "Document Verification":
+        setSuccessModalSettings({
+          handleClose: () => {
+            setIsModalOpen(false);
+            setCurrentProgress({
+              completed: [true, true, true, false, false],
+              current: "Entrance Examination",
+            });
+          },
+          title: "Submission Date Scheduled!",
+          message: (
+            <p>
+              Your submission date is scheduled for {docsVerificationDate}.
+              Please be prepared to attend on the specified date.
+            </p>
+          ),
+        });
+        setActionModalSettings({
+          title: "Schedule Date",
+          message: (
+            <>
+              <p>You have chosen the date {docsVerificationDate}</p>
+              <br />
+              <p className="text-red-800">
+                Once the submission date is set, it cannot be rescheduled.
+                Please ensure the date is correct before confirming.
+              </p>
+            </>
+          ),
+        });
+        break;
+    }
+  }, [currentProgress]);
+
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-secondary font-montserrat">
       <div className="absolute left-0 z-0 h-[100vh] w-[100vh] rounded-full bg-[radial-gradient(circle,_rgba(19,71,19,0.80),_rgba(19,71,19,0),_rgba(19,71,19,0))] opacity-55"></div>
+      <AnimatePresence initial={false} mode="wait">
+        {isModalOpen && !isFormCompleted && (
+          <ActionModal
+            handleClose={() => setIsModalOpen(false)}
+            title={actionModalSettings.title}
+            message={actionModalSettings.message}
+            modalIcon={modalIcon}
+            action={actionModalSettings.action}
+          />
+        )}
+        {isModalOpen && isFormCompleted && (
+          <SuccessModal
+            handleClose={successModalSettings.handleClose}
+            title={successModalSettings.title}
+            message={successModalSettings.message}
+            modalIcon={modalIcon}
+          />
+        )}
+      </AnimatePresence>
       <Progress
         currentProgress={currentProgress}
         setCurrentProgress={setCurrentProgress}
@@ -259,152 +362,97 @@ export default function FormPage() {
           {
             iconTertiary: AdmissionFormTertiary,
             iconPrimary: AdmissionFormPrimary,
-            name: "Admission Form",
-          },
-          {
-            iconTertiary: ExaminationTertiary,
-            iconPrimary: ExaminationPrimary,
-            name: "Examination",
+            name: "Application Submission",
           },
           {
             iconTertiary: ExamResultTertiary,
             iconPrimary: ExamResultPrimary,
-            name: "Exam Result",
+            name: "Document Verification",
+          },
+          {
+            iconTertiary: ExaminationTertiary,
+            iconPrimary: ExaminationPrimary,
+            name: "Entrance Examination",
           },
           {
             iconTertiary: ReqSubmissionTertiary,
             iconPrimary: ReqSubmissionPrimary,
-            name: "Requirements Submission",
+            name: "Document Submission",
           },
           {
             iconTertiary: EnrolledTertiary,
             iconPrimary: EnrolledPrimary,
-            name: "Enrolled",
+            name: "Enrollment Completed",
           },
         ]}
       >
-        <div className="scrollable-div flex h-screen w-full flex-col items-center overflow-y-auto pb-5 pr-10 pt-11">
-          <AnimatePresence initial={false} mode="wait">
-            {isModalOpen && !isFormCompleted && (
-              <ActionModal
-                handleClose={() => setIsModalOpen(false)}
-                title={"Submit Application"}
-                message={
-                  <>
-                    <p className="text-red-800">
-                      Once you submit your application, your information will be
-                      locked, and no further edits will be allowed. Please
-                      review all details carefully before proceeding.
-                    </p>
-                    <br />
-                    <p>
-                      Your control number will be generated upon submission.
-                    </p>
-                  </>
-                }
-                modalIcon={modalIcon}
-                action={() => submitForm()}
-              />
-            )}
-            {isModalOpen && isFormCompleted && (
-              <SuccessModal
-                handleClose={() =>
-                  setCurrentProgress({
-                    ...currentProgress,
-                    current: "Examination",
-                  })
-                }
-                title={"Submit Application"}
-                message={
-                  <>
-                    <p className="text-red-800">
-                      Once you submit your application, your information will be
-                      locked, and no further edits will be allowed. Please
-                      review all details carefully before proceeding.
-                    </p>
-                    <br />
-                    <p>
-                      Your control number will be generated upon submission.
-                    </p>
-                  </>
-                }
-                modalIcon={modalIcon}
-              />
-            )}
-          </AnimatePresence>
+        <div className="scrollable-div flex h-full w-full flex-col gap-5 overflow-y-scroll py-5 pr-10 text-tertiary">
+          {currentProgress.current !== "Application Submission" && (
+            <div className="flex items-center justify-between">
+              <div className="px-2">
+                <h1 className="q-text-xl">Welcome, {fullName}!</h1>
+                <h1 className="q-text-base">Control Number: {controlNum}</h1>
+              </div>
+              <div className="rounded-full bg-white p-1">
+                <img className="invisible h-16 w-16" />
+              </div>
+            </div>
+          )}
           <div
             className={`${formIndex === 0 ? "h-full" : "h-fit"} flex w-full flex-col rounded-3xl bg-component`}
           >
             <div className="flex items-center px-10 py-5">
-              <h1 className="flex items-center text-tertiary q-text-xl">
-                Admission Form
-              </h1>
+              {currentProgress.current === "Application Submission" && (
+                <h1 className="flex items-center text-tertiary q-text-xl">
+                  Admission Form
+                </h1>
+              )}
+              {currentProgress.current === "Document Verification" && (
+                <h1 className="flex items-center text-tertiary q-text-xl">
+                  Schedule Submission Date
+                </h1>
+              )}
+                 {currentProgress.current === "Entrance Examination" && (
+                <div className="flex gap-5">
+                <h1 className="flex items-center text-tertiary q-text-xl">
+                  Schedule
+                </h1>
+                <h1 className="flex items-center text-tertiary q-text-xl">
+                  Examination Result
+                </h1>
+                </div>
+              )}
             </div>
-            <div className="flex h-full w-full flex-col rounded-3xl bg-white py-5">
+            <div className="flex h-full w-full flex-col rounded-3xl bg-white">
               <div
-                className="flex h-full w-full flex-col items-center gap-20 p-10 pb-0 text-tertiary q-gap-20 q-text-sm"
+                className="flex h-full w-full flex-col items-center gap-20 p-5 text-tertiary q-gap-20 q-text-sm"
                 ref={localRef}
               >
-                <div className="flex h-full w-9/12 flex-col">
-                  <InformationForm
-                    formData={formData}
+                {currentProgress.current === "Application Submission" && (
+                  <ApplicationSubmission
+                    data={formData}
                     handleChange={handleChange}
-                    formIndex={[0, 1, 2, 3]}
-                    value={formIndex}
-                    disabled={false}
+                    formIndex={formIndex}
+                    setFormIndex={setFormIndex}
+                    canProceedIndexes={canProceedIndexes}
+                    setIsModalOpen={setIsModalOpen}
                   />
-                  <div className="flex w-full items-center justify-center gap-1 pt-20">
-                    <button
-                      className={`${formIndex > 0 ? "bg-highlight" : "bg-secondary"} hover:highlight-light flex h-10 w-10 items-center justify-center rounded-xl disabled:opacity-50`}
-                      onClick={() =>
-                        formIndex > 0 && setFormIndex(formIndex - 1)
-                      }
-                      disabled={formIndex === 0}
-                    >
-                      <img
-                        className="h-3 rotate-90"
-                        src={formIndex > 0 ? ArrowPrimary : ArrowTertiary}
-                      />
-                    </button>
-                    {Array(4)
-                      .fill()
-                      .map((_, index) => (
-                        <button
-                          className={`${formIndex === index ? "bg-highlight text-primary hover:bg-highlight-light hover:text-primary" : "bg-secondary text-tertiary hover:bg-tertiary/30"} h-10 w-10 rounded-xl`}
-                          key={index}
-                          onClick={() =>
-                            canProceedIndexes[index - 1] &&
-                            index === 0 &&
-                            setFormIndex(index)
-                          }
-                        >
-                          {index + 1}
-                        </button>
-                      ))}
-                    <button
-                      className={`${formIndex === 3 ? (canProceedIndexes[3] ? "h-10 bg-highlight px-5 text-primary" : "h-10 bg-secondary px-5 opacity-50") : canProceedIndexes[formIndex] ? "h-10 w-10 bg-highlight" : "h-10 w-10 bg-secondary opacity-50"} flex items-center justify-center rounded-xl`}
-                      onClick={() =>
-                        formIndex !== 3
-                          ? setFormIndex(formIndex + 1)
-                          : setIsModalOpen(true)
-                      }
-                      disabled={!canProceedIndexes[formIndex]}
-                    >
-                      {formIndex === 3 ? (
-                        <p>Submit</p>
-                      ) : (
-                        <img
-                          className="h-3 -rotate-90"
-                          src={
-                            formIndex !== 3 && canProceedIndexes[formIndex]
-                              ? ArrowPrimary
-                              : ArrowTertiary
-                          }
-                        />
-                      )}
-                    </button>
-                  </div>
-                </div>
+                )}
+                {currentProgress.current === "Document Verification" && (
+                  <DocumentVerification
+                    data={docsVerificationDate}
+                    handleChange={(e) =>
+                      setDocsVerificationDate(e.target.value)
+                    }
+                    setIsModalOpen={setIsModalOpen}
+                    setActionModalSettings={setActionModalSettings}
+                    setSuccessModalSettings={setSuccessModalSettings}
+                    setCurrentProgress={setCurrentProgress}
+                  />
+                )}
+                {currentProgress.current === "Entrance Examination" && (
+                  <EntranceExamination />
+                )}
               </div>
             </div>
           </div>

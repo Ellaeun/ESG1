@@ -167,7 +167,7 @@ export default function AuthPage({ setUserId, setIsLoggedIn }) {
               navigate("/admission");
             }}
             title={"Registration Successful!"}
-            message={modalMessage}
+            message={<>{modalMessage}</>}
             modalIcon={modalIcon}
           />
         )}

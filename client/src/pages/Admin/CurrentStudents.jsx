@@ -152,7 +152,7 @@ export default function CurrentStudents() {
         columnNames={[
           "Full Name",
           "Academic Status",
-          "Course",
+          "Program",
           "Year Standing",
           "Enrollment Status",
         ]}
