@@ -90,7 +90,7 @@ export function AppProvider({ children }) {
   // useEffect(() => {
   //   navigate(
   //     role === "New"
-  //       ? "/admission"
+  //       ? "/application"
   //       : role === "Admin"
   //         ? "/admin"
   //         : role === "Student"

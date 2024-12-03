@@ -25,7 +25,7 @@ export async function postAppointment(req, res) {
 		await db.query(
 			`
 			INSERT INTO appointments (userId, appointmentType, appointmentDate)
-			VALUES (?, ?, ?}
+			VALUES (?, ?, ?)
 			`,
 			[userId, appointmentType, appointmentDate]
 		);

@@ -11,6 +11,7 @@ import SuccessModal from "../components/SuccessModal.jsx";
 import ApplicationSubmission from "./application/ApplicationSubmission.jsx";
 import DocumentVerification from "./application/DocumentVerification.jsx";
 import EntranceExamination from "./application/EntranceExamination.jsx";
+import DocumentSubmission from "./application/DocumentSubmission.jsx";
 
 import AdmissionFormTertiary from "../assets/admission-form-tertiary.svg";
 import ExaminationTertiary from "../assets/examination-tertiary.svg";
@@ -31,10 +32,12 @@ export default function ApplicationPage() {
   const [controlNum, setControlNum] = useState("");
   const [fullName, setFullName] = useState("");
   const [docsVerificationDate, setDocsVerificationDate] = useState("");
+  const [formattedDate, setFormattedDate] = useState();
   const [currentProgress, setCurrentProgress] = useState({
-    completed: [true, false, false, false, false],
+    completed: [false, false, false, false, false],
     current: "Application Submission",
   });
+  const [currentSubProgress, setCurrentSubProgress] = useState("");
   const [isFormCompleted, setIsFormCompleted] = useState(false);
   // modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -165,14 +168,6 @@ export default function ApplicationPage() {
     });
   }
 
-  function handleClose(completed, current) {
-    setIsModalOpen(false);
-    setCurrentProgress({
-      completed,
-      current,
-    });
-  }
-
   function handleChange(e) {
     const { name, value } = e.target;
 
@@ -199,7 +194,24 @@ export default function ApplicationPage() {
     } catch (err) {
       console.error({
         status: err.response.status,
-        message: err.response.data.message,
+        message: err.response.data.error,
+      });
+    }
+  }
+
+  async function submitAppointment() {
+    try {
+      const res = await api.post("/appointment/post-appointment", {
+        appointmentType: "Document Verification",
+        appointmentDate: docsVerificationDate,
+      });
+
+      setIsFormCompleted(true);
+      console.log({ status: res.status, message: res.data.message });
+    } catch (err) {
+      console.error({
+        status: err.response.status,
+        message: err.response.data.error,
       });
     }
   }
@@ -268,70 +280,28 @@ export default function ApplicationPage() {
   }, [formData, formIndex]);
 
   useEffect(() => {
-    scrollToTop();
-  }, [formIndex]);
-
-  useEffect(() => {
-    switch (currentProgress) {
-      case "Application Submission":
-        setActionModalSettings({
-          title: "Submit Application",
-          message: (
-            <>
-              <p className="text-red-800">
-                Once you submit your application, your information will be
-                locked, and no further edits will be allowed. Please review all
-                details carefully before proceeding.
-              </p>
-              <br />
-              <p>Your control number will be generated upon submission.</p>
-            </>
-          ),
-          action: () => submitForm(),
-        });
-        setSuccessModalSettings({
-          handleClose: () =>
-            handleClose(
-              [true, true, false, false, false],
-              "Document Verification",
-            ),
-          title: "Application Submitted!",
-          message: <p>Your control number is {controlNum}</p>,
-        });
-        break;
+    switch (currentProgress.current) {
       case "Document Verification":
-        setSuccessModalSettings({
-          handleClose: () => {
-            setIsModalOpen(false);
-            setCurrentProgress({
-              completed: [true, true, true, false, false],
-              current: "Entrance Examination",
-            });
-          },
-          title: "Submission Date Scheduled!",
-          message: (
-            <p>
-              Your submission date is scheduled for {docsVerificationDate}.
-              Please be prepared to attend on the specified date.
-            </p>
-          ),
-        });
-        setActionModalSettings({
-          title: "Schedule Date",
-          message: (
-            <>
-              <p>You have chosen the date {docsVerificationDate}</p>
-              <br />
-              <p className="text-red-800">
-                Once the submission date is set, it cannot be rescheduled.
-                Please ensure the date is correct before confirming.
-              </p>
-            </>
-          ),
-        });
+        setCurrentSubProgress("Verification Date");
+        break;
+      case "Entrance Examination":
+        setCurrentSubProgress("Exam Date");
+        break;
+      case "Document Submission":
+        setCurrentSubProgress("Society Payment");
         break;
     }
   }, [currentProgress]);
+
+  useEffect(() => {
+    async function getUserInfo() {}
+
+    getUserInfo();
+  }, []);
+
+  useEffect(() => {
+    scrollToTop();
+  }, [formIndex]);
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-secondary font-montserrat">
@@ -399,28 +369,61 @@ export default function ApplicationPage() {
             </div>
           )}
           <div
-            className={`${formIndex === 0 ? "h-full" : "h-fit"} flex w-full flex-col rounded-3xl bg-component`}
+            className={`${formIndex === 0 ? "h-full" : "h-fit"} flex w-full flex-col rounded-3xl bg-component q-text-lg`}
           >
-            <div className="flex items-center px-10 py-5">
+            <div className="flex items-center gap-8 px-10 py-5">
               {currentProgress.current === "Application Submission" && (
-                <h1 className="flex items-center text-tertiary q-text-xl">
+                <h1 className="flex flex-col items-center text-tertiary">
                   Admission Form
                 </h1>
               )}
               {currentProgress.current === "Document Verification" && (
-                <h1 className="flex items-center text-tertiary q-text-xl">
-                  Schedule Submission Date
-                </h1>
+                <>
+                  <h1 className="flex flex-col items-center text-tertiary">
+                    Schedule Verification
+                    <div
+                      className={`${currentSubProgress === "Schedule Verification" ? "visible" : "invisible"} h-1 w-full rounded-full bg-tertiary`}
+                    />
+                  </h1>
+                  <h1 className="flex flex-col items-center text-tertiary">
+                    Verification Date
+                    <div
+                      className={`${currentSubProgress === "Verification Date" ? "visible" : "invisible"} h-1 w-full rounded-full bg-tertiary`}
+                    />
+                  </h1>
+                </>
               )}
-                 {currentProgress.current === "Entrance Examination" && (
-                <div className="flex gap-5">
-                <h1 className="flex items-center text-tertiary q-text-xl">
-                  Schedule
-                </h1>
-                <h1 className="flex items-center text-tertiary q-text-xl">
-                  Examination Result
-                </h1>
-                </div>
+              {currentProgress.current === "Entrance Examination" && (
+                <>
+                  <h1 className="flex flex-col items-center text-tertiary">
+                    Exam Date
+                    <div
+                      className={`${currentSubProgress === "Exam Date" ? "visible" : "invisible"} h-1 w-full rounded-full bg-tertiary`}
+                    />
+                  </h1>
+                  <h1 className="flex flex-col items-center text-tertiary">
+                    Exam Evaluation
+                    <div
+                      className={`${currentSubProgress === "Exam Evaluation" ? "visible" : "invisible"} h-1 w-full rounded-full bg-tertiary`}
+                    />
+                  </h1>
+                </>
+              )}
+              {currentProgress.current === "Document Submission" && (
+                <>
+                  <h1 className="flex flex-col items-center text-tertiary">
+                    Submission Date
+                    <div
+                      className={`${currentSubProgress === "Submission Date" ? "visible" : "invisible"} h-1 w-full rounded-full bg-tertiary`}
+                    />
+                  </h1>
+                  <h1 className="flex flex-col items-center text-tertiary">
+                    Society Payment
+                    <div
+                      className={`${currentSubProgress === "Society Payment" ? "visible" : "invisible"} h-1 w-full rounded-full bg-tertiary`}
+                    />
+                  </h1>
+                </>
               )}
             </div>
             <div className="flex h-full w-full flex-col rounded-3xl bg-white">
@@ -435,7 +438,13 @@ export default function ApplicationPage() {
                     formIndex={formIndex}
                     setFormIndex={setFormIndex}
                     canProceedIndexes={canProceedIndexes}
+                    controlNum={controlNum}
                     setIsModalOpen={setIsModalOpen}
+                    setActionModalSettings={setActionModalSettings}
+                    setSuccessModalSettings={setSuccessModalSettings}
+                    setCurrentProgress={setCurrentProgress}
+                    setIsFormCompleted={setIsFormCompleted}
+                    submitForm={submitForm}
                   />
                 )}
                 {currentProgress.current === "Document Verification" && (
@@ -444,14 +453,31 @@ export default function ApplicationPage() {
                     handleChange={(e) =>
                       setDocsVerificationDate(e.target.value)
                     }
+                    formattedDate={formattedDate}
+                    setFormattedDate={setFormattedDate}
+                    setCurrentProgress={setCurrentProgress}
+                    currentSubProgress={currentSubProgress}
+                    setCurrentSubProgress={setCurrentSubProgress}
                     setIsModalOpen={setIsModalOpen}
                     setActionModalSettings={setActionModalSettings}
                     setSuccessModalSettings={setSuccessModalSettings}
-                    setCurrentProgress={setCurrentProgress}
+                    setIsFormCompleted={setIsFormCompleted}
+                    submitAppointment={submitAppointment}
                   />
                 )}
                 {currentProgress.current === "Entrance Examination" && (
-                  <EntranceExamination />
+                  <EntranceExamination
+                    fullName={fullName}
+                    setCurrentProgress={setCurrentProgress}
+                    currentSubProgress={currentSubProgress}
+                  />
+                )}
+                {currentProgress.current === "Document Submission" && (
+                  <DocumentSubmission
+                    fullName={fullName}
+                    setCurrentProgress={setCurrentProgress}
+                    currentSubProgress={currentSubProgress}
+                  />
                 )}
               </div>
             </div>

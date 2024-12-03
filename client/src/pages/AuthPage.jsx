@@ -98,7 +98,7 @@ export default function AuthPage({ setUserId, setIsLoggedIn }) {
 
       console.error({
         status: err.response.status,
-        message: err.response.data.message,
+        message: err.response.data.error,
       });
     }
   }

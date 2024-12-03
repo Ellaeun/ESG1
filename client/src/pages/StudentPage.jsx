@@ -120,7 +120,7 @@ export default function StudentPage() {
                 </div>
               )}
               {currentTab === "Student Information" && (
-                <div className="flex gap-5 py-2 pl-10 pr-5 q-text-base">
+                <div className="flex gap-8 py-2 pl-10 pr-5 q-text-lg">
                   {studentInfoSubTabs.map((subTab, index) => (
                     <button
                       className="py-3 text-tertiary hover:text-tertiary/80"
@@ -136,7 +136,7 @@ export default function StudentPage() {
                 </div>
               )}
               {currentTab === "Course Enrollment" && (
-                <div className="flex gap-5 py-2 pl-10 pr-5 q-text-base">
+                <div className="flex gap-8 py-2 pl-10 pr-5 q-text-lg">
                   {courseEnrollmentSubTabs.map((subTab, index) => (
                     <button
                       className="py-3 text-tertiary hover:text-tertiary/80"
@@ -167,4 +167,3 @@ export default function StudentPage() {
     </div>
   );
 }
-

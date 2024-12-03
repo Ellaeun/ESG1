@@ -11,7 +11,13 @@ ApplicationSubmission.propTypes = {
   formIndex: PropTypes.number.isRequired,
   setFormIndex: PropTypes.func.isRequired,
   canProceedIndexes: PropTypes.array.isRequired,
+  controlNum: PropTypes.array.isRequired,
   setIsModalOpen: PropTypes.func.isRequired,
+  setActionModalSettings: PropTypes.func.isRequired,
+  setSuccessModalSettings: PropTypes.func.isRequired,
+  setCurrentProgress: PropTypes.func.isRequired,
+  setIsFormCompleted: PropTypes.func.isRequired,
+  submitForm: PropTypes.func.isRequired,
 };
 
 export default function ApplicationSubmission({
@@ -20,8 +26,45 @@ export default function ApplicationSubmission({
   formIndex,
   setFormIndex,
   canProceedIndexes,
+  controlNum,
   setIsModalOpen,
+  setActionModalSettings,
+  setSuccessModalSettings,
+  setCurrentProgress,
+  setIsFormCompleted,
+  submitForm,
 }) {
+  function handleModalOpen() {
+    setIsModalOpen(true);
+    setIsFormCompleted(false);
+    setActionModalSettings({
+      title: "Submit Application",
+      message: (
+        <>
+          <p className="text-red-800">
+            Once you submit your application, your information will be locked,
+            and no further edits will be allowed. Please review all details
+            carefully before proceeding.
+          </p>
+          <br />
+          <p>Your control number will be generated upon submission.</p>
+        </>
+      ),
+      action: () => submitForm(),
+    });
+    setSuccessModalSettings({
+      handleClose: () => {
+        setIsModalOpen(false);
+        setCurrentProgress({
+          completed: [true, false, false, false, false],
+          current: "Document Verification",
+        });
+      },
+      title: "Application Submitted!",
+      message: <p>Your control number is {controlNum}</p>,
+    });
+  }
+
   return (
     <div className="flex h-full w-9/12 flex-col">
       <InformationForm
@@ -60,7 +103,7 @@ export default function ApplicationSubmission({
         <button
           className={`${formIndex === 3 ? (canProceedIndexes[3] ? "h-10 bg-highlight px-5 text-primary" : "h-10 bg-secondary px-5 opacity-50") : canProceedIndexes[formIndex] ? "h-10 w-10 bg-highlight" : "h-10 w-10 bg-secondary opacity-50"} flex items-center justify-center rounded-xl`}
           onClick={() =>
-            formIndex !== 3 ? setFormIndex(formIndex + 1) : setIsModalOpen(true)
+            formIndex !== 3 ? setFormIndex(formIndex + 1) : handleModalOpen
           }
           disabled={!canProceedIndexes[formIndex]}
         >

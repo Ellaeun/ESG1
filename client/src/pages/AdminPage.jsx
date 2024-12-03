@@ -100,8 +100,8 @@ export default function AdminPage() {
           </div>
           <div className="flex h-fit w-full">
             <div className="flex h-fit w-full flex-col rounded-3xl bg-component">
-              <div className="flex items-center justify-between overflow-hidden px-5">
-                <div className="flex gap-5 py-2 pl-10 pr-5">
+              <div className="flex items-center justify-between overflow-hidden">
+                <div className="flex gap-8 py-2 pl-10 pr-5 q-text-lg">
                   {currentTab === "Manage Enrollment" &&
                     manageEnrollmentSubTabs.map((subTab, index) => (
                       <button

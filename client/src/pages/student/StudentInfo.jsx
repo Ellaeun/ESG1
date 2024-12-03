@@ -120,7 +120,7 @@ export default function StudentInfo({ currentSubTab, studentInfoSubTabs }) {
       } catch (err) {
         console.error({
           status: err.response.status,
-          message: err.response.data.message,
+          message: err.response.data.error,
         });
       }
     }
