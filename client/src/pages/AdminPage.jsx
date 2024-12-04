@@ -75,11 +75,6 @@ export default function AdminPage() {
             name: "Student Records",
           },
           {
-            iconTertiary: StudentRecordsTertiary,
-            iconPrimary: StudentRecordsPrimary,
-            name: "Medical Assessment",
-          },
-          {
             iconTertiary: AccountManagementTertiary,
             iconPrimary: AccountManagementPrimary,
             name: "Account Management",
